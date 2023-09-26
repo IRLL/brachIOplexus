@@ -4,10 +4,10 @@ import select
 
 
 class SocketHandler:
-    def __init__(self):
+    def __init__(self, virtual=False):
         """
         Socket handler used for UDP communication with BrachIOPlexus uses one port for sending and another for
-        receiving.  Due to the dual port nature of this setup it is best to have one thread constantly looking for
+        receiving.  Due to the dual port nature of this setup it is best to have one reading_thread constantly looking for
         packets and another sending when needed.
 
         Attributes:
@@ -16,15 +16,19 @@ class SocketHandler:
             udp_ip (string): The IP address of the computer/program that you want to send data to. Use 127.0.0.1 when communicating between two programs on the same computer.
             bufferSize (int): Buffer size for incoming bytes.  Default (1024)
             sock (socket): UDP socket
+            virtual: Whether sending movement packets to real arm, or simulated arm
         """
-        self.port_tx = 30006
+        if virtual:
+            self.port_tx = 30004
+        else:
+            self.port_tx = 30006
         self.port_rx = 30007
         self.udp_ip = "127.0.0.1"
         self.buffer_size = 1024
         self.failed_packets = 0
 
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.sock.bind(("", self.port_rx))  # Binding to a blank address should look for all possible connections
+        self.sock.bind(("127.0.0.1", self.port_rx))  # Binding to a blank address should look for all possible connections
         self.sock.setblocking(False)  # We don't want RX to block anything
 
     def read_packet(self):

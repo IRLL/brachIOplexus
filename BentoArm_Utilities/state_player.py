@@ -1,6 +1,6 @@
 import csv
 from socket_handler import SocketHandler
-from robot import Robot
+from interactive_robot import IRobot
 import sys
 import os.path
 import time
@@ -8,8 +8,8 @@ import time
 RATE = 1 / 140  # RATE = 1 / hz
 
 
-def playback(file, normalized=True, socket_handler=None):
-    robot = Robot(normalized=normalized)  # Setup Robot
+def playback(file, normalized=True):
+    robot = IRobot(normalized=normalized, virtual=False)  # Setup Robot
     input("Press enter to playback csv file, ensure you've enabled Torque On in BracIOplexus Bento Arm Menu")
 
     done_check = False
@@ -26,9 +26,8 @@ def playback(file, normalized=True, socket_handler=None):
                     assert (int(float(
                         state[0])) > 1), "Value read not in dyna motor range, did you set normalized correctly?"
                 done_check = True
-            packet = robot.build_joints_packet(joint_positions=state)
-            socket_handler.send_packet(packet)
-            time.sleep(RATE)  # Approx 10 ms to allow time for some movements
+            robot.move_robot(state)
+            time.sleep(RATE)
         print(f"Playback Time: {time.time() - start_time}")
 
 
@@ -40,6 +39,6 @@ if __name__ == "__main__":
 
     assert (os.path.isfile(sys.argv[1])), f"{sys.argv[1]} Does not exist"  # Check if file given actually exists
     if sys.argv[1].split('_')[-1] == 'dynavalues.csv':
-        playback(normalized=False, file=sys.argv[1], socket_handler=SocketHandler())
+        playback(normalized=False, file=sys.argv[1])
     else:
-        playback(normalized=True, file=sys.argv[1], socket_handler=SocketHandler())
+        playback(normalized=True, file=sys.argv[1])
