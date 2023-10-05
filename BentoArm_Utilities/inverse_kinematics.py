@@ -15,7 +15,7 @@ class InverseKinematics:
         using the solidworks model.
 
         Args:
-            robot_obj (Robot): Robot class which is needed for the joint min and max positions
+            robot_obj (Robot): Robot class which is needed for the joint min and max positions and for reading robot state
 
         Attributes:
             bento_chain (Chain): IKPy Chain, a collection of links and _joints representing the bento arm
