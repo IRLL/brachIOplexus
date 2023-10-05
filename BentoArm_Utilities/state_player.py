@@ -7,6 +7,7 @@ import time
 
 VIRTUAL = False
 
+
 def playback(file, normalized, virtual=False):
     RATE = 1 / 100  # RATE = 1 / hz
     robot = IRobot(normalized=normalized, virtual=virtual)  # Setup Robot

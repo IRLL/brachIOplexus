@@ -1,11 +1,11 @@
-from inverse_kinematics import  InverseKinematics
+from inverse_kinematics import InverseKinematics
 from interactive_robot import IRobot
 import time
 
 robot = IRobot(normalized=False, virtual=False)
 ik = InverseKinematics(robot_obj=robot)
 
-positions = [2048,2580,2048,1511,2048]
+positions = [2048, 2580, 2048, 1511, 2048]
 robot.move_robot(joint_positions=positions, wait=True)
 
 goal = [52.7, 0, 15.55]

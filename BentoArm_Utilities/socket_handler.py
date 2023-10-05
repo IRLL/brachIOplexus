@@ -28,7 +28,8 @@ class SocketHandler:
         self.failed_packets = 0
 
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.sock.bind(("127.0.0.1", self.port_rx))  # Binding to a blank address should look for all possible connections
+        self.sock.bind(
+            ("127.0.0.1", self.port_rx))  # Binding to a blank address should look for all possible connections
         self.sock.setblocking(False)  # We don't want RX to block anything
 
     def read_packet(self):

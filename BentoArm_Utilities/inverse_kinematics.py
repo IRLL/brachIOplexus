@@ -199,7 +199,8 @@ class InverseKinematics:
             return joints
 
         else:
-            return [change_scale(-pi, pi, self.robot._joints[0].DYNA_MIN, self.robot._joints[0].DYNA_MAX, i) for i in ik_radians]
+            return [change_scale(-pi, pi, self.robot._joints[0].DYNA_MIN, self.robot._joints[0].DYNA_MAX, i) for i in
+                    ik_radians]
 
 
 def test_ik():

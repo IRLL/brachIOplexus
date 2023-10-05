@@ -5,6 +5,7 @@ from helper_functions import checksum_fcn
 import signal
 import time
 
+
 class IRobot(Robot):
     VELOCITY = 1024
     """Joint velocity Dynamixel"""
@@ -67,7 +68,6 @@ class IRobot(Robot):
         signal.signal(signal.SIGINT, self._exit_gracefully)
         signal.signal(signal.SIGTERM, self._exit_gracefully)
 
-
     def move_robot(self, joint_positions, wait=False):
         """
         Main function for moving the arm, will set the current target variable to the joint_positions requested.  If
@@ -96,9 +96,8 @@ class IRobot(Robot):
 
     def stop_robot(self):
         """Stops all the robots threads and closes the socket connection"""
-        self._exit_gracefully(0,0)
+        self._exit_gracefully(0, 0)
         self._socket_handler.sock.close()
-
 
     def _build_joints_packet(self):
         """
