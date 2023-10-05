@@ -1,6 +1,5 @@
 from state_player import playback
 from state_recorder import StateRecorder
-from socket_handler import SocketHandler
 from inverse_kinematics import test_ik
 import csv
 import os
@@ -11,34 +10,28 @@ def main():
     """Test inverse kinematics"""
     test_ik()
 
-    sock = SocketHandler()
-
     """Test normalized joint_positions recording and playback"""
-    recorder = StateRecorder(normalized=True, print_data=False, socket_handler=sock)
+    recorder = StateRecorder(normalized=True, print_data=False)
     recorder.test()
-    recorder.robot.stop_reading_thread()
 
-    with open(recorder.filename, 'w', newline='') as fp:
-        w = csv.writer(fp)
-        w.writerows(recorder.data)
+    playback(file=recorder.filename, normalized=True)
 
-    start = time.time()
-    playback(file=recorder.filename, normalized=True, socket_handler=sock)
+    input("Now test in the simulator, disconnect from robot and connect to simulator then press enter")
+    playback(file=recorder.filename, normalized=True, virtual=True)
+
     os.remove(recorder.filename)
+    input("Now record motion inside the simulator")
 
     """Test dyna values joint_positions recording and playback"""
-    sock.sock.close()
-    sock2 = SocketHandler()
 
-    recorder2 = StateRecorder(normalized=False, print_data=False, socket_handler=sock2)
+    recorder2 = StateRecorder(normalized=False, print_data=False)
     recorder2.test()
-    recorder2.robot.stop_reading_thread()
 
     with open(recorder2.filename, 'w', newline='') as fp:
         w = csv.writer(fp)
         w.writerows(recorder2.data)
 
-    playback(file=recorder2.filename, normalized=False, socket_handler=sock2)
+    playback(file=recorder2.filename, normalized=False, virtual=False)
     os.remove(recorder2.filename)
 
 

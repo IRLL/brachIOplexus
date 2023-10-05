@@ -1,0 +1,1174 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.10.0" />
+<title>interactive_robot API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>interactive_robot</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">from robot import Robot
+from socket_handler import SocketHandler
+from threading import Thread
+from helper_functions import checksum_fcn
+import time
+
+
+class IRobot(Robot):
+    VELOCITY = 1024
+    &#34;&#34;&#34;Foo&#34;&#34;&#34;
+    SIM_VELOCITY = 45
+    TOLERANCE = 15  # Difference between current and goal state to consider goal reached
+    SIM_RATE = 1 / 100  # Rate for publishing to simulator
+    COMPARE_RATE = 1 / 30  # Rate for comparing target to current position
+    READING_RATE = 1 / 1000  # RATE = 1 / hz
+
+    def __init__(self, normalized=True, virtual=False):
+        &#34;&#34;&#34;
+        Interactive Robot is a child of Robot class but contains methods for reading robot states and sending movement
+        targets.  Methods operate the same for both virtual and real life robot. Important to remember that real robot
+        takes positional goals and virtual robot takes velocity goals.  Because of this the virtual robot needs a thread
+        that is always sending targets.
+
+        Args:
+            normalized:  If true joint joint_positions is represented via a [0, 1] range else the dynamixel range [0,4095]
+            virtual: If true interacting with Unity robot, if false using real robot
+        &#34;&#34;&#34;
+
+        super().__init__(normalized=normalized)  # Call parent class constructor
+
+        self._socket_handler = SocketHandler(virtual=virtual)
+        self.target_position = [2048] * 5  # Targets are always in dyna range
+        self.target_velocity = [self.VELOCITY] * 5  # Velocities for real world robot
+        self.virtual = virtual
+        self.at_target = False
+
+        # Threads
+        self.first_packet_read = False
+        self.reading_thread_running = False
+        self.reading_thread = Thread(target=self.get_joints_from_udp_loop)
+
+        self.target_thread = Thread(target=self.compare_current_to_target)
+
+        # Start the reading thread, it will block until first packet received
+        self.start_reading_thread()
+
+        if virtual:
+            self.target_velocity = [self.SIM_VELOCITY] * 5  # Velocities for virtual robot
+            self.sim_thread_running = False
+            self.sim_thread = Thread(target=self.publish_sim_motor_states)
+            # Only used by simulator
+            self.target_motor_states = [0] * 5  # 0 Not moving, 1 Increasing, 2 Decreasing
+            self.sim_thread.start()
+
+    def move_robot(self, joint_positions, wait=False):
+        self.update_targets(joint_positions=joint_positions)
+        self.at_target = False
+
+        if self.virtual:
+            pass  # Packet sending is handled by simulator thread
+        else:
+            packet = self.build_joints_packet()
+            self._socket_handler.send_packet(packet)
+        if wait:
+            while self.at_target is False:
+                time.sleep(0.01)
+
+    def build_joints_packet(self):
+        &#34;&#34;&#34;
+        Builds a bytearray packet of velocities and positions for each motor given the current target position and
+        velocites.  If using the real robot the packet will sent/parsed by the BracIOplexus software to create motor
+        commands. This packet structure was developed by us, not brachIOplexus.  It is a simple bytearray container two
+        0xFF headers followed by two bytes for position and two bytes for velocity in a little endian format and ending
+        with checksum.  See README.md for breakdown of packet structure.  If using simulated robot will use a control
+        packet defined by Unity software described here https://github.com/BLINCdev/Virtual-Bento/blob/main/UDP_Packet_Structure.pdf
+
+        Returns:
+            bytearray: packet to be sent to BrachIOplexus or Unity Simulator via udp
+
+        Todo:
+            This yet supports velocity control, just using default values for now
+        &#34;&#34;&#34;
+
+        if self.virtual:
+            # Compare current position to target_position position, unfortunately the sim allows position to go outside
+            # of allowable range so checks are needed to make sure it doesn&#39;t go out of range
+            # Update joint motor states  0 - off  1 - increase  2 - decrease
+            joint_positions = self.get_joint_positions(normalized=False)
+            for i in range(len(joint_positions)):
+                if abs((joint_positions[i] - self.target_position[i])) &lt; self.TOLERANCE:
+                    self.target_motor_states[i] = 0
+                elif self._joints[i].position_min &gt; joint_positions[i] &gt; self._joints[i].position_max:
+                    self.target_motor_states[i] = 0
+                elif joint_positions[i] &gt; self.target_position[i]:
+                    self.target_motor_states[i] = 2
+                else:
+                    self.target_motor_states[i] = 1
+
+            packet = [0xFF, 0xFF, 1, 4 * len(self._joints)]  # Length = 4 bytes (pos + vel) per joint
+            for i in range(len(self._joints)):
+                # Convert data into little endian bytes
+                packet.append(i)
+                packet.append(self.target_velocity[i] &amp; 0xFF)
+                packet.append((self.target_velocity[i] &gt;&gt; 8) &amp; 0xFF)
+                packet.append(self.target_motor_states[i] &amp; 0xFF)
+            packet.append(checksum_fcn(packet[2:]))  # Append checksum function to end
+            return bytearray(packet)
+        else:
+            packet = [0xFF, 0xFF, 4 * len(self._joints)]  # Length = 4 bytes (pos + vel) per joint
+            for i in range(len(self._joints)):
+                # Convert data into little endian bytes
+                packet.append(self.target_position[i] &amp; 0xFF)
+                packet.append((self.target_position[i] &gt;&gt; 8) &amp; 0xFF)
+                packet.append(self.target_velocity[i] &amp; 0xFF)
+                packet.append((self.target_velocity[i] &gt;&gt; 8) &amp; 0xFF)
+            packet.append(checksum_fcn(packet[2:]))  # Append checksum function to end
+            return bytearray(packet)
+
+    def assert_velocities(self, velocities):
+        &#34;&#34;&#34;
+        Asserts that given velocities are in proper range
+        Args:
+            velocities:
+
+        Returns:
+            Velocities in a allowable range
+        &#34;&#34;&#34;
+
+        assert (len(velocities) == len(self._joints)), &#34;Invalid velocities length, pass for all 5 _joints&#34;
+
+        if self.virtual:
+            pass
+        else:
+            for i in range(len(self._joints)):
+                assert (velocities[i] in range(self._joints[i].velocity_min, self._joints[
+                    i].velocity_max)), &#34;Make sure servo velocities are within valid range&#34;
+
+        return velocities
+
+    def convert_assert_joint_positions(self, joint_positions):
+        &#34;&#34;&#34;
+        Converts joint positions to dyna range and asserts that they are in proper range
+
+        Args:
+            joint_positions: Desired joint positions in dyna or normalized range
+
+        Returns:
+            joint positions in dyna range with positional checks done
+        &#34;&#34;&#34;
+        assert (len(joint_positions) == len(self._joints)), &#34;Invalid positions length, pass for all 5 _joints&#34;
+
+        if self.normalized:  # [0,1]
+            &#34;&#34;&#34;If normalized, convert to individual motors dyna range&#34;&#34;&#34;
+            joint_positions = [float(i) for i in joint_positions]
+            for i in range(len(self._joints)):
+                joint_positions[i] = self._joints[i].normalized_to_dyna_pos_range((joint_positions[
+                    i]))  # Converting normalized to dyna range always ensures it&#39;s within allowable range
+            joint_positions = [int(i) for i in joint_positions]
+        else:  # [0,4095]
+            &#34;&#34;&#34;If raw values, assert if in range&#34;&#34;&#34;
+            joint_positions = [int(i) for i in joint_positions]
+            for i in range(len(self._joints)):
+                # Check positions
+                assert (self._joints[i].position_min &lt;= joint_positions[i] &lt;= self._joints[
+                    i].postion_max), &#34;Make sure servo positions are within valid range&#34;
+        return joint_positions
+
+    def compare_current_to_target(self):
+        &#34;&#34;&#34;
+        Compares target to current position and decided if target is at goal
+
+        Returns:
+            None
+
+        &#34;&#34;&#34;
+        while self.reading_thread_running:
+            total_difference = 0
+            for i in range(len(self._joints)):
+                total_difference += abs(self.target_position[i] - self.get_joint_positions()[i])
+
+            if total_difference &gt; (self.TOLERANCE * len(self._joints)):
+                self.at_target = False
+            else:
+                self.at_target = True
+
+            time.sleep(self.COMPARE_RATE)
+
+    def get_joints_from_udp_loop(self):
+        &#34;&#34;&#34;
+        While loop that constantly checks for UDP packets from brachIOplexus and updates robot_obj state when received
+
+        Returns:
+            None
+
+        &#34;&#34;&#34;
+        self.reading_thread_running = True
+
+        while self.reading_thread_running:
+            # Check if packet is available with current joint_positions
+            packet = self._socket_handler.read_packet()
+
+            if not packet:
+                continue
+
+            # First packet read
+            if self.first_packet_read is False:
+                self.first_packet_read = True
+
+            # Update known robot_obj joint_positions using the packet
+            self.update_joints_from_packet(packet)  # Read current joint positions
+
+            time.sleep(self.READING_RATE)
+
+    def publish_sim_motor_states(self):
+        &#34;&#34;&#34;
+        Thread that publishes a unity packet to move motors in simulator needs to be running constantly cause will only
+        move for a short period of time.
+
+        Returns:
+
+        &#34;&#34;&#34;
+        self.sim_thread_running = True
+        print(&#34;Starting simulator state publisher&#34;)
+
+        while self.sim_thread_running:
+            packet = self.build_joints_packet()
+            self._socket_handler.send_packet(packet)
+            time.sleep(self.SIM_RATE)
+
+    def start_reading_thread(self):
+        &#34;&#34;&#34;
+        Starts the reading_thread that receives packets from brachIOPlexus and updates the robots state.  This will
+        block until the first packet is read.
+
+        Args:
+            socket_handler: A socket handler required for reading state
+
+        Returns:
+            None
+
+        &#34;&#34;&#34;
+        print(&#34;Starting read packet thread, waiting for first packet&#34;)
+        self.reading_thread.start()
+
+        # Make sure nothing else starts until a first packet is read
+        while self.first_packet_read is False:
+            time.sleep(0.1)
+        print(&#34;First packet recieved&#34;)
+
+        # Start comparison thread
+        self.target_thread.start()
+
+    def stop_reading_thread(self):
+        self.reading_thread_running = False
+        self.reading_thread.join()
+        self.target_thread.join()
+
+    def stop_sim_thread(self):
+        self.sim_thread_running = False
+        self.sim_thread.join()
+
+    def update_joints_from_packet(self, packet):
+        &#34;&#34;&#34;
+        Parses a packet and updates each _joints status (Position, Velocity, Load, Temperature).  The incoming packet
+        is the same for both virual and non virtual robot.  BrachIOplexus handles sending that packet and sends in same
+        format for virtual and non virtual.
+
+        Args:
+            packet (bytearray): UDP packet received from brachIOplexus
+
+        Returns:
+            None
+        &#34;&#34;&#34;
+
+        for i in range(3, packet[2], 9):
+            idx = packet[i] - 1  # Packet has ID (which starts at 1) need index
+            # Since you can read values outside allowable range when torque is not enabled, best always clamp the value
+            self._joints[idx].position = self._joints[idx].get_clamped_dyna_joint_position(
+                position=int.from_bytes(packet[i + 1:i + 3], byteorder=&#39;little&#39;))
+            self._joints[idx].velocity = int.from_bytes(packet[i + 3:i + 5], byteorder=&#39;little&#39;)
+            self._joints[idx].load = int.from_bytes(packet[i + 5:i + 7], byteorder=&#39;little&#39;)
+            self._joints[idx].temp = packet[i + 7]
+            self._joints[idx].state = packet[i + 8]
+
+    def update_targets(self, joint_positions, velocities=None):
+        &#34;&#34;&#34;
+        Creates a new target_position state in dyna range
+
+        Args:
+            velocities: Target velocities in sim or real range
+            joint_positions: List of desired joint positions in normalized or dyna range
+
+        Returns:
+
+        &#34;&#34;&#34;
+        if velocities is None:
+            velocities = self.target_velocity
+
+        # Safety check positional targets and convert to dyna range
+        self.target_position = self.convert_assert_joint_positions(joint_positions=joint_positions)
+        # Safety check that velocity targets are within allowed range
+        self.assert_velocities(velocities=velocities)
+
+    def __repr__(self):
+        return f&#39;Position: {self.get_joint_positions()}, Target: {self.target_position}, At Target: {self.at_target}&#39;</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="interactive_robot.IRobot"><code class="flex name class">
+<span>class <span class="ident">IRobot</span></span>
+<span>(</span><span>normalized=True, virtual=False)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Interactive Robot is a child of Robot class but contains methods for reading robot states and sending movement
+targets.
+Methods operate the same for both virtual and real life robot. Important to remember that real robot
+takes positional goals and virtual robot takes velocity goals.
+Because of this the virtual robot needs a thread
+that is always sending targets.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>normalized</code></strong></dt>
+<dd>If true joint joint_positions is represented via a [0, 1] range else the dynamixel range [0,4095]</dd>
+<dt><strong><code>virtual</code></strong></dt>
+<dd>If true interacting with Unity robot, if false using real robot</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class IRobot(Robot):
+    VELOCITY = 1024
+    &#34;&#34;&#34;Foo&#34;&#34;&#34;
+    SIM_VELOCITY = 45
+    TOLERANCE = 15  # Difference between current and goal state to consider goal reached
+    SIM_RATE = 1 / 100  # Rate for publishing to simulator
+    COMPARE_RATE = 1 / 30  # Rate for comparing target to current position
+    READING_RATE = 1 / 1000  # RATE = 1 / hz
+
+    def __init__(self, normalized=True, virtual=False):
+        &#34;&#34;&#34;
+        Interactive Robot is a child of Robot class but contains methods for reading robot states and sending movement
+        targets.  Methods operate the same for both virtual and real life robot. Important to remember that real robot
+        takes positional goals and virtual robot takes velocity goals.  Because of this the virtual robot needs a thread
+        that is always sending targets.
+
+        Args:
+            normalized:  If true joint joint_positions is represented via a [0, 1] range else the dynamixel range [0,4095]
+            virtual: If true interacting with Unity robot, if false using real robot
+        &#34;&#34;&#34;
+
+        super().__init__(normalized=normalized)  # Call parent class constructor
+
+        self._socket_handler = SocketHandler(virtual=virtual)
+        self.target_position = [2048] * 5  # Targets are always in dyna range
+        self.target_velocity = [self.VELOCITY] * 5  # Velocities for real world robot
+        self.virtual = virtual
+        self.at_target = False
+
+        # Threads
+        self.first_packet_read = False
+        self.reading_thread_running = False
+        self.reading_thread = Thread(target=self.get_joints_from_udp_loop)
+
+        self.target_thread = Thread(target=self.compare_current_to_target)
+
+        # Start the reading thread, it will block until first packet received
+        self.start_reading_thread()
+
+        if virtual:
+            self.target_velocity = [self.SIM_VELOCITY] * 5  # Velocities for virtual robot
+            self.sim_thread_running = False
+            self.sim_thread = Thread(target=self.publish_sim_motor_states)
+            # Only used by simulator
+            self.target_motor_states = [0] * 5  # 0 Not moving, 1 Increasing, 2 Decreasing
+            self.sim_thread.start()
+
+    def move_robot(self, joint_positions, wait=False):
+        self.update_targets(joint_positions=joint_positions)
+        self.at_target = False
+
+        if self.virtual:
+            pass  # Packet sending is handled by simulator thread
+        else:
+            packet = self.build_joints_packet()
+            self._socket_handler.send_packet(packet)
+        if wait:
+            while self.at_target is False:
+                time.sleep(0.01)
+
+    def build_joints_packet(self):
+        &#34;&#34;&#34;
+        Builds a bytearray packet of velocities and positions for each motor given the current target position and
+        velocites.  If using the real robot the packet will sent/parsed by the BracIOplexus software to create motor
+        commands. This packet structure was developed by us, not brachIOplexus.  It is a simple bytearray container two
+        0xFF headers followed by two bytes for position and two bytes for velocity in a little endian format and ending
+        with checksum.  See README.md for breakdown of packet structure.  If using simulated robot will use a control
+        packet defined by Unity software described here https://github.com/BLINCdev/Virtual-Bento/blob/main/UDP_Packet_Structure.pdf
+
+        Returns:
+            bytearray: packet to be sent to BrachIOplexus or Unity Simulator via udp
+
+        Todo:
+            This yet supports velocity control, just using default values for now
+        &#34;&#34;&#34;
+
+        if self.virtual:
+            # Compare current position to target_position position, unfortunately the sim allows position to go outside
+            # of allowable range so checks are needed to make sure it doesn&#39;t go out of range
+            # Update joint motor states  0 - off  1 - increase  2 - decrease
+            joint_positions = self.get_joint_positions(normalized=False)
+            for i in range(len(joint_positions)):
+                if abs((joint_positions[i] - self.target_position[i])) &lt; self.TOLERANCE:
+                    self.target_motor_states[i] = 0
+                elif self._joints[i].position_min &gt; joint_positions[i] &gt; self._joints[i].position_max:
+                    self.target_motor_states[i] = 0
+                elif joint_positions[i] &gt; self.target_position[i]:
+                    self.target_motor_states[i] = 2
+                else:
+                    self.target_motor_states[i] = 1
+
+            packet = [0xFF, 0xFF, 1, 4 * len(self._joints)]  # Length = 4 bytes (pos + vel) per joint
+            for i in range(len(self._joints)):
+                # Convert data into little endian bytes
+                packet.append(i)
+                packet.append(self.target_velocity[i] &amp; 0xFF)
+                packet.append((self.target_velocity[i] &gt;&gt; 8) &amp; 0xFF)
+                packet.append(self.target_motor_states[i] &amp; 0xFF)
+            packet.append(checksum_fcn(packet[2:]))  # Append checksum function to end
+            return bytearray(packet)
+        else:
+            packet = [0xFF, 0xFF, 4 * len(self._joints)]  # Length = 4 bytes (pos + vel) per joint
+            for i in range(len(self._joints)):
+                # Convert data into little endian bytes
+                packet.append(self.target_position[i] &amp; 0xFF)
+                packet.append((self.target_position[i] &gt;&gt; 8) &amp; 0xFF)
+                packet.append(self.target_velocity[i] &amp; 0xFF)
+                packet.append((self.target_velocity[i] &gt;&gt; 8) &amp; 0xFF)
+            packet.append(checksum_fcn(packet[2:]))  # Append checksum function to end
+            return bytearray(packet)
+
+    def assert_velocities(self, velocities):
+        &#34;&#34;&#34;
+        Asserts that given velocities are in proper range
+        Args:
+            velocities:
+
+        Returns:
+            Velocities in a allowable range
+        &#34;&#34;&#34;
+
+        assert (len(velocities) == len(self._joints)), &#34;Invalid velocities length, pass for all 5 _joints&#34;
+
+        if self.virtual:
+            pass
+        else:
+            for i in range(len(self._joints)):
+                assert (velocities[i] in range(self._joints[i].velocity_min, self._joints[
+                    i].velocity_max)), &#34;Make sure servo velocities are within valid range&#34;
+
+        return velocities
+
+    def convert_assert_joint_positions(self, joint_positions):
+        &#34;&#34;&#34;
+        Converts joint positions to dyna range and asserts that they are in proper range
+
+        Args:
+            joint_positions: Desired joint positions in dyna or normalized range
+
+        Returns:
+            joint positions in dyna range with positional checks done
+        &#34;&#34;&#34;
+        assert (len(joint_positions) == len(self._joints)), &#34;Invalid positions length, pass for all 5 _joints&#34;
+
+        if self.normalized:  # [0,1]
+            &#34;&#34;&#34;If normalized, convert to individual motors dyna range&#34;&#34;&#34;
+            joint_positions = [float(i) for i in joint_positions]
+            for i in range(len(self._joints)):
+                joint_positions[i] = self._joints[i].normalized_to_dyna_pos_range((joint_positions[
+                    i]))  # Converting normalized to dyna range always ensures it&#39;s within allowable range
+            joint_positions = [int(i) for i in joint_positions]
+        else:  # [0,4095]
+            &#34;&#34;&#34;If raw values, assert if in range&#34;&#34;&#34;
+            joint_positions = [int(i) for i in joint_positions]
+            for i in range(len(self._joints)):
+                # Check positions
+                assert (self._joints[i].position_min &lt;= joint_positions[i] &lt;= self._joints[
+                    i].postion_max), &#34;Make sure servo positions are within valid range&#34;
+        return joint_positions
+
+    def compare_current_to_target(self):
+        &#34;&#34;&#34;
+        Compares target to current position and decided if target is at goal
+
+        Returns:
+            None
+
+        &#34;&#34;&#34;
+        while self.reading_thread_running:
+            total_difference = 0
+            for i in range(len(self._joints)):
+                total_difference += abs(self.target_position[i] - self.get_joint_positions()[i])
+
+            if total_difference &gt; (self.TOLERANCE * len(self._joints)):
+                self.at_target = False
+            else:
+                self.at_target = True
+
+            time.sleep(self.COMPARE_RATE)
+
+    def get_joints_from_udp_loop(self):
+        &#34;&#34;&#34;
+        While loop that constantly checks for UDP packets from brachIOplexus and updates robot_obj state when received
+
+        Returns:
+            None
+
+        &#34;&#34;&#34;
+        self.reading_thread_running = True
+
+        while self.reading_thread_running:
+            # Check if packet is available with current joint_positions
+            packet = self._socket_handler.read_packet()
+
+            if not packet:
+                continue
+
+            # First packet read
+            if self.first_packet_read is False:
+                self.first_packet_read = True
+
+            # Update known robot_obj joint_positions using the packet
+            self.update_joints_from_packet(packet)  # Read current joint positions
+
+            time.sleep(self.READING_RATE)
+
+    def publish_sim_motor_states(self):
+        &#34;&#34;&#34;
+        Thread that publishes a unity packet to move motors in simulator needs to be running constantly cause will only
+        move for a short period of time.
+
+        Returns:
+
+        &#34;&#34;&#34;
+        self.sim_thread_running = True
+        print(&#34;Starting simulator state publisher&#34;)
+
+        while self.sim_thread_running:
+            packet = self.build_joints_packet()
+            self._socket_handler.send_packet(packet)
+            time.sleep(self.SIM_RATE)
+
+    def start_reading_thread(self):
+        &#34;&#34;&#34;
+        Starts the reading_thread that receives packets from brachIOPlexus and updates the robots state.  This will
+        block until the first packet is read.
+
+        Args:
+            socket_handler: A socket handler required for reading state
+
+        Returns:
+            None
+
+        &#34;&#34;&#34;
+        print(&#34;Starting read packet thread, waiting for first packet&#34;)
+        self.reading_thread.start()
+
+        # Make sure nothing else starts until a first packet is read
+        while self.first_packet_read is False:
+            time.sleep(0.1)
+        print(&#34;First packet recieved&#34;)
+
+        # Start comparison thread
+        self.target_thread.start()
+
+    def stop_reading_thread(self):
+        self.reading_thread_running = False
+        self.reading_thread.join()
+        self.target_thread.join()
+
+    def stop_sim_thread(self):
+        self.sim_thread_running = False
+        self.sim_thread.join()
+
+    def update_joints_from_packet(self, packet):
+        &#34;&#34;&#34;
+        Parses a packet and updates each _joints status (Position, Velocity, Load, Temperature).  The incoming packet
+        is the same for both virual and non virtual robot.  BrachIOplexus handles sending that packet and sends in same
+        format for virtual and non virtual.
+
+        Args:
+            packet (bytearray): UDP packet received from brachIOplexus
+
+        Returns:
+            None
+        &#34;&#34;&#34;
+
+        for i in range(3, packet[2], 9):
+            idx = packet[i] - 1  # Packet has ID (which starts at 1) need index
+            # Since you can read values outside allowable range when torque is not enabled, best always clamp the value
+            self._joints[idx].position = self._joints[idx].get_clamped_dyna_joint_position(
+                position=int.from_bytes(packet[i + 1:i + 3], byteorder=&#39;little&#39;))
+            self._joints[idx].velocity = int.from_bytes(packet[i + 3:i + 5], byteorder=&#39;little&#39;)
+            self._joints[idx].load = int.from_bytes(packet[i + 5:i + 7], byteorder=&#39;little&#39;)
+            self._joints[idx].temp = packet[i + 7]
+            self._joints[idx].state = packet[i + 8]
+
+    def update_targets(self, joint_positions, velocities=None):
+        &#34;&#34;&#34;
+        Creates a new target_position state in dyna range
+
+        Args:
+            velocities: Target velocities in sim or real range
+            joint_positions: List of desired joint positions in normalized or dyna range
+
+        Returns:
+
+        &#34;&#34;&#34;
+        if velocities is None:
+            velocities = self.target_velocity
+
+        # Safety check positional targets and convert to dyna range
+        self.target_position = self.convert_assert_joint_positions(joint_positions=joint_positions)
+        # Safety check that velocity targets are within allowed range
+        self.assert_velocities(velocities=velocities)
+
+    def __repr__(self):
+        return f&#39;Position: {self.get_joint_positions()}, Target: {self.target_position}, At Target: {self.at_target}&#39;</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>robot.Robot</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="interactive_robot.IRobot.COMPARE_RATE"><code class="name">var <span class="ident">COMPARE_RATE</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="interactive_robot.IRobot.READING_RATE"><code class="name">var <span class="ident">READING_RATE</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="interactive_robot.IRobot.SIM_RATE"><code class="name">var <span class="ident">SIM_RATE</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="interactive_robot.IRobot.SIM_VELOCITY"><code class="name">var <span class="ident">SIM_VELOCITY</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="interactive_robot.IRobot.TOLERANCE"><code class="name">var <span class="ident">TOLERANCE</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="interactive_robot.IRobot.VELOCITY"><code class="name">var <span class="ident">VELOCITY</span></code></dt>
+<dd>
+<div class="desc"><p>Foo</p></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="interactive_robot.IRobot.assert_velocities"><code class="name flex">
+<span>def <span class="ident">assert_velocities</span></span>(<span>self, velocities)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Asserts that given velocities are in proper range</p>
+<h2 id="args">Args</h2>
+<p>velocities:</p>
+<h2 id="returns">Returns</h2>
+<p>Velocities in a allowable range</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def assert_velocities(self, velocities):
+    &#34;&#34;&#34;
+    Asserts that given velocities are in proper range
+    Args:
+        velocities:
+
+    Returns:
+        Velocities in a allowable range
+    &#34;&#34;&#34;
+
+    assert (len(velocities) == len(self._joints)), &#34;Invalid velocities length, pass for all 5 _joints&#34;
+
+    if self.virtual:
+        pass
+    else:
+        for i in range(len(self._joints)):
+            assert (velocities[i] in range(self._joints[i].velocity_min, self._joints[
+                i].velocity_max)), &#34;Make sure servo velocities are within valid range&#34;
+
+    return velocities</code></pre>
+</details>
+</dd>
+<dt id="interactive_robot.IRobot.build_joints_packet"><code class="name flex">
+<span>def <span class="ident">build_joints_packet</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Builds a bytearray packet of velocities and positions for each motor given the current target position and
+velocites.
+If using the real robot the packet will sent/parsed by the BracIOplexus software to create motor
+commands. This packet structure was developed by us, not brachIOplexus.
+It is a simple bytearray container two
+0xFF headers followed by two bytes for position and two bytes for velocity in a little endian format and ending
+with checksum.
+See README.md for breakdown of packet structure.
+If using simulated robot will use a control
+packet defined by Unity software described here <a href="https://github.com/BLINCdev/Virtual-Bento/blob/main/UDP_Packet_Structure.pdf">https://github.com/BLINCdev/Virtual-Bento/blob/main/UDP_Packet_Structure.pdf</a></p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>bytearray</code></dt>
+<dd>packet to be sent to BrachIOplexus or Unity Simulator via udp</dd>
+</dl>
+<h2 id="todo">Todo</h2>
+<p>This yet supports velocity control, just using default values for now</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def build_joints_packet(self):
+    &#34;&#34;&#34;
+    Builds a bytearray packet of velocities and positions for each motor given the current target position and
+    velocites.  If using the real robot the packet will sent/parsed by the BracIOplexus software to create motor
+    commands. This packet structure was developed by us, not brachIOplexus.  It is a simple bytearray container two
+    0xFF headers followed by two bytes for position and two bytes for velocity in a little endian format and ending
+    with checksum.  See README.md for breakdown of packet structure.  If using simulated robot will use a control
+    packet defined by Unity software described here https://github.com/BLINCdev/Virtual-Bento/blob/main/UDP_Packet_Structure.pdf
+
+    Returns:
+        bytearray: packet to be sent to BrachIOplexus or Unity Simulator via udp
+
+    Todo:
+        This yet supports velocity control, just using default values for now
+    &#34;&#34;&#34;
+
+    if self.virtual:
+        # Compare current position to target_position position, unfortunately the sim allows position to go outside
+        # of allowable range so checks are needed to make sure it doesn&#39;t go out of range
+        # Update joint motor states  0 - off  1 - increase  2 - decrease
+        joint_positions = self.get_joint_positions(normalized=False)
+        for i in range(len(joint_positions)):
+            if abs((joint_positions[i] - self.target_position[i])) &lt; self.TOLERANCE:
+                self.target_motor_states[i] = 0
+            elif self._joints[i].position_min &gt; joint_positions[i] &gt; self._joints[i].position_max:
+                self.target_motor_states[i] = 0
+            elif joint_positions[i] &gt; self.target_position[i]:
+                self.target_motor_states[i] = 2
+            else:
+                self.target_motor_states[i] = 1
+
+        packet = [0xFF, 0xFF, 1, 4 * len(self._joints)]  # Length = 4 bytes (pos + vel) per joint
+        for i in range(len(self._joints)):
+            # Convert data into little endian bytes
+            packet.append(i)
+            packet.append(self.target_velocity[i] &amp; 0xFF)
+            packet.append((self.target_velocity[i] &gt;&gt; 8) &amp; 0xFF)
+            packet.append(self.target_motor_states[i] &amp; 0xFF)
+        packet.append(checksum_fcn(packet[2:]))  # Append checksum function to end
+        return bytearray(packet)
+    else:
+        packet = [0xFF, 0xFF, 4 * len(self._joints)]  # Length = 4 bytes (pos + vel) per joint
+        for i in range(len(self._joints)):
+            # Convert data into little endian bytes
+            packet.append(self.target_position[i] &amp; 0xFF)
+            packet.append((self.target_position[i] &gt;&gt; 8) &amp; 0xFF)
+            packet.append(self.target_velocity[i] &amp; 0xFF)
+            packet.append((self.target_velocity[i] &gt;&gt; 8) &amp; 0xFF)
+        packet.append(checksum_fcn(packet[2:]))  # Append checksum function to end
+        return bytearray(packet)</code></pre>
+</details>
+</dd>
+<dt id="interactive_robot.IRobot.compare_current_to_target"><code class="name flex">
+<span>def <span class="ident">compare_current_to_target</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Compares target to current position and decided if target is at goal</p>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def compare_current_to_target(self):
+    &#34;&#34;&#34;
+    Compares target to current position and decided if target is at goal
+
+    Returns:
+        None
+
+    &#34;&#34;&#34;
+    while self.reading_thread_running:
+        total_difference = 0
+        for i in range(len(self._joints)):
+            total_difference += abs(self.target_position[i] - self.get_joint_positions()[i])
+
+        if total_difference &gt; (self.TOLERANCE * len(self._joints)):
+            self.at_target = False
+        else:
+            self.at_target = True
+
+        time.sleep(self.COMPARE_RATE)</code></pre>
+</details>
+</dd>
+<dt id="interactive_robot.IRobot.convert_assert_joint_positions"><code class="name flex">
+<span>def <span class="ident">convert_assert_joint_positions</span></span>(<span>self, joint_positions)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Converts joint positions to dyna range and asserts that they are in proper range</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>joint_positions</code></strong></dt>
+<dd>Desired joint positions in dyna or normalized range</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>joint positions in dyna range with positional checks done</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def convert_assert_joint_positions(self, joint_positions):
+    &#34;&#34;&#34;
+    Converts joint positions to dyna range and asserts that they are in proper range
+
+    Args:
+        joint_positions: Desired joint positions in dyna or normalized range
+
+    Returns:
+        joint positions in dyna range with positional checks done
+    &#34;&#34;&#34;
+    assert (len(joint_positions) == len(self._joints)), &#34;Invalid positions length, pass for all 5 _joints&#34;
+
+    if self.normalized:  # [0,1]
+        &#34;&#34;&#34;If normalized, convert to individual motors dyna range&#34;&#34;&#34;
+        joint_positions = [float(i) for i in joint_positions]
+        for i in range(len(self._joints)):
+            joint_positions[i] = self._joints[i].normalized_to_dyna_pos_range((joint_positions[
+                i]))  # Converting normalized to dyna range always ensures it&#39;s within allowable range
+        joint_positions = [int(i) for i in joint_positions]
+    else:  # [0,4095]
+        &#34;&#34;&#34;If raw values, assert if in range&#34;&#34;&#34;
+        joint_positions = [int(i) for i in joint_positions]
+        for i in range(len(self._joints)):
+            # Check positions
+            assert (self._joints[i].position_min &lt;= joint_positions[i] &lt;= self._joints[
+                i].postion_max), &#34;Make sure servo positions are within valid range&#34;
+    return joint_positions</code></pre>
+</details>
+</dd>
+<dt id="interactive_robot.IRobot.get_joints_from_udp_loop"><code class="name flex">
+<span>def <span class="ident">get_joints_from_udp_loop</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>While loop that constantly checks for UDP packets from brachIOplexus and updates robot_obj state when received</p>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_joints_from_udp_loop(self):
+    &#34;&#34;&#34;
+    While loop that constantly checks for UDP packets from brachIOplexus and updates robot_obj state when received
+
+    Returns:
+        None
+
+    &#34;&#34;&#34;
+    self.reading_thread_running = True
+
+    while self.reading_thread_running:
+        # Check if packet is available with current joint_positions
+        packet = self._socket_handler.read_packet()
+
+        if not packet:
+            continue
+
+        # First packet read
+        if self.first_packet_read is False:
+            self.first_packet_read = True
+
+        # Update known robot_obj joint_positions using the packet
+        self.update_joints_from_packet(packet)  # Read current joint positions
+
+        time.sleep(self.READING_RATE)</code></pre>
+</details>
+</dd>
+<dt id="interactive_robot.IRobot.move_robot"><code class="name flex">
+<span>def <span class="ident">move_robot</span></span>(<span>self, joint_positions, wait=False)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def move_robot(self, joint_positions, wait=False):
+    self.update_targets(joint_positions=joint_positions)
+    self.at_target = False
+
+    if self.virtual:
+        pass  # Packet sending is handled by simulator thread
+    else:
+        packet = self.build_joints_packet()
+        self._socket_handler.send_packet(packet)
+    if wait:
+        while self.at_target is False:
+            time.sleep(0.01)</code></pre>
+</details>
+</dd>
+<dt id="interactive_robot.IRobot.publish_sim_motor_states"><code class="name flex">
+<span>def <span class="ident">publish_sim_motor_states</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Thread that publishes a unity packet to move motors in simulator needs to be running constantly cause will only
+move for a short period of time.</p>
+<p>Returns:</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def publish_sim_motor_states(self):
+    &#34;&#34;&#34;
+    Thread that publishes a unity packet to move motors in simulator needs to be running constantly cause will only
+    move for a short period of time.
+
+    Returns:
+
+    &#34;&#34;&#34;
+    self.sim_thread_running = True
+    print(&#34;Starting simulator state publisher&#34;)
+
+    while self.sim_thread_running:
+        packet = self.build_joints_packet()
+        self._socket_handler.send_packet(packet)
+        time.sleep(self.SIM_RATE)</code></pre>
+</details>
+</dd>
+<dt id="interactive_robot.IRobot.start_reading_thread"><code class="name flex">
+<span>def <span class="ident">start_reading_thread</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Starts the reading_thread that receives packets from brachIOPlexus and updates the robots state.
+This will
+block until the first packet is read.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>socket_handler</code></strong></dt>
+<dd>A socket handler required for reading state</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def start_reading_thread(self):
+    &#34;&#34;&#34;
+    Starts the reading_thread that receives packets from brachIOPlexus and updates the robots state.  This will
+    block until the first packet is read.
+
+    Args:
+        socket_handler: A socket handler required for reading state
+
+    Returns:
+        None
+
+    &#34;&#34;&#34;
+    print(&#34;Starting read packet thread, waiting for first packet&#34;)
+    self.reading_thread.start()
+
+    # Make sure nothing else starts until a first packet is read
+    while self.first_packet_read is False:
+        time.sleep(0.1)
+    print(&#34;First packet recieved&#34;)
+
+    # Start comparison thread
+    self.target_thread.start()</code></pre>
+</details>
+</dd>
+<dt id="interactive_robot.IRobot.stop_reading_thread"><code class="name flex">
+<span>def <span class="ident">stop_reading_thread</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def stop_reading_thread(self):
+    self.reading_thread_running = False
+    self.reading_thread.join()
+    self.target_thread.join()</code></pre>
+</details>
+</dd>
+<dt id="interactive_robot.IRobot.stop_sim_thread"><code class="name flex">
+<span>def <span class="ident">stop_sim_thread</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def stop_sim_thread(self):
+    self.sim_thread_running = False
+    self.sim_thread.join()</code></pre>
+</details>
+</dd>
+<dt id="interactive_robot.IRobot.update_joints_from_packet"><code class="name flex">
+<span>def <span class="ident">update_joints_from_packet</span></span>(<span>self, packet)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Parses a packet and updates each _joints status (Position, Velocity, Load, Temperature).
+The incoming packet
+is the same for both virual and non virtual robot.
+BrachIOplexus handles sending that packet and sends in same
+format for virtual and non virtual.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>packet</code></strong> :&ensp;<code>bytearray</code></dt>
+<dd>UDP packet received from brachIOplexus</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def update_joints_from_packet(self, packet):
+    &#34;&#34;&#34;
+    Parses a packet and updates each _joints status (Position, Velocity, Load, Temperature).  The incoming packet
+    is the same for both virual and non virtual robot.  BrachIOplexus handles sending that packet and sends in same
+    format for virtual and non virtual.
+
+    Args:
+        packet (bytearray): UDP packet received from brachIOplexus
+
+    Returns:
+        None
+    &#34;&#34;&#34;
+
+    for i in range(3, packet[2], 9):
+        idx = packet[i] - 1  # Packet has ID (which starts at 1) need index
+        # Since you can read values outside allowable range when torque is not enabled, best always clamp the value
+        self._joints[idx].position = self._joints[idx].get_clamped_dyna_joint_position(
+            position=int.from_bytes(packet[i + 1:i + 3], byteorder=&#39;little&#39;))
+        self._joints[idx].velocity = int.from_bytes(packet[i + 3:i + 5], byteorder=&#39;little&#39;)
+        self._joints[idx].load = int.from_bytes(packet[i + 5:i + 7], byteorder=&#39;little&#39;)
+        self._joints[idx].temp = packet[i + 7]
+        self._joints[idx].state = packet[i + 8]</code></pre>
+</details>
+</dd>
+<dt id="interactive_robot.IRobot.update_targets"><code class="name flex">
+<span>def <span class="ident">update_targets</span></span>(<span>self, joint_positions, velocities=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a new target_position state in dyna range</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>velocities</code></strong></dt>
+<dd>Target velocities in sim or real range</dd>
+<dt><strong><code>joint_positions</code></strong></dt>
+<dd>List of desired joint positions in normalized or dyna range</dd>
+</dl>
+<p>Returns:</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def update_targets(self, joint_positions, velocities=None):
+    &#34;&#34;&#34;
+    Creates a new target_position state in dyna range
+
+    Args:
+        velocities: Target velocities in sim or real range
+        joint_positions: List of desired joint positions in normalized or dyna range
+
+    Returns:
+
+    &#34;&#34;&#34;
+    if velocities is None:
+        velocities = self.target_velocity
+
+    # Safety check positional targets and convert to dyna range
+    self.target_position = self.convert_assert_joint_positions(joint_positions=joint_positions)
+    # Safety check that velocity targets are within allowed range
+    self.assert_velocities(velocities=velocities)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="interactive_robot.IRobot" href="#interactive_robot.IRobot">IRobot</a></code></h4>
+<ul class="">
+<li><code><a title="interactive_robot.IRobot.COMPARE_RATE" href="#interactive_robot.IRobot.COMPARE_RATE">COMPARE_RATE</a></code></li>
+<li><code><a title="interactive_robot.IRobot.READING_RATE" href="#interactive_robot.IRobot.READING_RATE">READING_RATE</a></code></li>
+<li><code><a title="interactive_robot.IRobot.SIM_RATE" href="#interactive_robot.IRobot.SIM_RATE">SIM_RATE</a></code></li>
+<li><code><a title="interactive_robot.IRobot.SIM_VELOCITY" href="#interactive_robot.IRobot.SIM_VELOCITY">SIM_VELOCITY</a></code></li>
+<li><code><a title="interactive_robot.IRobot.TOLERANCE" href="#interactive_robot.IRobot.TOLERANCE">TOLERANCE</a></code></li>
+<li><code><a title="interactive_robot.IRobot.VELOCITY" href="#interactive_robot.IRobot.VELOCITY">VELOCITY</a></code></li>
+<li><code><a title="interactive_robot.IRobot.assert_velocities" href="#interactive_robot.IRobot.assert_velocities">assert_velocities</a></code></li>
+<li><code><a title="interactive_robot.IRobot.build_joints_packet" href="#interactive_robot.IRobot.build_joints_packet">build_joints_packet</a></code></li>
+<li><code><a title="interactive_robot.IRobot.compare_current_to_target" href="#interactive_robot.IRobot.compare_current_to_target">compare_current_to_target</a></code></li>
+<li><code><a title="interactive_robot.IRobot.convert_assert_joint_positions" href="#interactive_robot.IRobot.convert_assert_joint_positions">convert_assert_joint_positions</a></code></li>
+<li><code><a title="interactive_robot.IRobot.get_joints_from_udp_loop" href="#interactive_robot.IRobot.get_joints_from_udp_loop">get_joints_from_udp_loop</a></code></li>
+<li><code><a title="interactive_robot.IRobot.move_robot" href="#interactive_robot.IRobot.move_robot">move_robot</a></code></li>
+<li><code><a title="interactive_robot.IRobot.publish_sim_motor_states" href="#interactive_robot.IRobot.publish_sim_motor_states">publish_sim_motor_states</a></code></li>
+<li><code><a title="interactive_robot.IRobot.start_reading_thread" href="#interactive_robot.IRobot.start_reading_thread">start_reading_thread</a></code></li>
+<li><code><a title="interactive_robot.IRobot.stop_reading_thread" href="#interactive_robot.IRobot.stop_reading_thread">stop_reading_thread</a></code></li>
+<li><code><a title="interactive_robot.IRobot.stop_sim_thread" href="#interactive_robot.IRobot.stop_sim_thread">stop_sim_thread</a></code></li>
+<li><code><a title="interactive_robot.IRobot.update_joints_from_packet" href="#interactive_robot.IRobot.update_joints_from_packet">update_joints_from_packet</a></code></li>
+<li><code><a title="interactive_robot.IRobot.update_targets" href="#interactive_robot.IRobot.update_targets">update_targets</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+</footer>
+</body>
+</html>

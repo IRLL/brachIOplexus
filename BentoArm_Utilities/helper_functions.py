@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def change_scale(old_min, old_max, new_min, new_max, value):
     """
     Converts value in [old_min, old_max] proportionally to [new_min, new_max]
@@ -37,8 +38,9 @@ def fill_state(state):
 
 
 def get_diff_xyz(first, second):
+    """Finds the difference between two arrays/tuples"""
     total_diff = 0
-    assert(len(first) == len(second))
+    assert (len(first) == len(second))
     for i in range(len(first)):
-        total_diff += abs(first[i]-second[i])
+        total_diff += abs(first[i] - second[i])
     return total_diff

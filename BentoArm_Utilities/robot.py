@@ -30,7 +30,7 @@ class Robot:
         self._joints = [MxSeries(index=i) for i in range(5)]
         self.hand_states = {"closed": -0.15, "mid": 0.24, "open": 1.1428}
 
-    def get_joint_objects(self):
+    def _get_joint_objects(self):
         """Getter for joints object so they remain private"""
         return self._joints
 
@@ -74,16 +74,6 @@ class Robot:
 
     def __repr__(self):
         return str(self.get_joint_positions())
-
-
-
-
-
-
-
-
-
-
 
 
 class ServoInfo(object):

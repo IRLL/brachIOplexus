@@ -48,7 +48,7 @@ class InverseKinematics:
                 origin_orientation=[pi, 0, 0],
                 joint_type="revolute",
                 rotation=[0, 0, 1],
-                bounds=(self.robot.get_joint_objects()[0].radians_min, self.robot.get_joint_objects()[0].radians_max)
+                bounds=(self.robot._get_joint_objects()[0].radians_min, self.robot._get_joint_objects()[0].radians_max)
             ),
             URDFLink(
                 name="shoulder_to_elbow",
@@ -56,7 +56,7 @@ class InverseKinematics:
                 origin_orientation=[0, 0, 0],
                 joint_type="revolute",
                 rotation=[0, 1, 0],
-                bounds=(self.robot.get_joint_objects()[1].radians_min, self.robot.get_joint_objects()[1].radians_max)
+                bounds=(self.robot._get_joint_objects()[1].radians_min, self.robot._get_joint_objects()[1].radians_max)
             ),
             URDFLink(
                 name="elbow_to_forearm",
@@ -64,7 +64,7 @@ class InverseKinematics:
                 origin_orientation=[0, 0, 0],
                 joint_type="revolute",
                 rotation=[1, 0, 0],
-                bounds=(self.robot.get_joint_objects()[2].radians_min, self.robot.get_joint_objects()[2].radians_max)
+                bounds=(self.robot._get_joint_objects()[2].radians_min, self.robot._get_joint_objects()[2].radians_max)
             ),
             URDFLink(
                 name="forearm_to_wrist",
@@ -72,7 +72,7 @@ class InverseKinematics:
                 origin_orientation=[0, 0, 0],
                 joint_type="revolute",
                 rotation=[0, 1, 0],
-                bounds=(self.robot.get_joint_objects()[3].radians_min, self.robot.get_joint_objects()[3].radians_max)
+                bounds=(self.robot._get_joint_objects()[3].radians_min, self.robot._get_joint_objects()[3].radians_max)
             ),
             URDFLink(
                 name="wrist_to_hand",
@@ -163,15 +163,16 @@ class InverseKinematics:
         if self.robot.normalized:
             joints_to_ik = [change_scale(old_min=0,
                                          old_max=1,
-                                         new_min=self.robot.get_joint_objects()[i].radians_min,
-                                         new_max=self.robot.get_joint_objects()[i].radians_max,
-                                         value=self.robot.get_joint_objects()[i].get_normalized_joint_position()) for i in range(4)]
+                                         new_min=self.robot._get_joint_objects()[i].radians_min,
+                                         new_max=self.robot._get_joint_objects()[i].radians_max,
+                                         value=self.robot._get_joint_objects()[i].get_normalized_joint_position()) for i
+                            in range(4)]
         else:
             joints_to_ik = [change_scale(old_min=self.robot.DYNA_MIN,
                                          old_max=self.robot.DYNA_MAX,
                                          new_min=-pi,
                                          new_max=pi,
-                                         value=self.robot.get_joint_objects()[i].position) for i in range(4)]
+                                         value=self.robot._get_joint_objects()[i].position) for i in range(4)]
         return self.forward_kinematics(joints_to_ik, matrix=False)
 
     def get_joints_for_goal_xyz(self, goal_xyz, hand_state="mid"):
@@ -190,8 +191,8 @@ class InverseKinematics:
         ik_radians[-1] = self.robot.hand_states[hand_state]
         # IKPY returns in [-pi, pi], need in [0,4096] or [0,1]
         if self.robot.normalized:
-            joints = [change_scale(old_min=self.robot.get_joint_objects()[i].radians_min,
-                                   old_max=self.robot.get_joint_objects()[i].radians_max,
+            joints = [change_scale(old_min=self.robot._get_joint_objects()[i].radians_min,
+                                   old_max=self.robot._get_joint_objects()[i].radians_max,
                                    new_min=0,
                                    new_max=1,
                                    value=ik_radians[i]) for i in range(5)]
@@ -199,6 +200,7 @@ class InverseKinematics:
 
         else:
             return [change_scale(-pi, pi, self.robot.DYNA_MIN, self.robot.DYNA_MAX, i) for i in ik_radians]
+
 
 def test_ik():
     """
