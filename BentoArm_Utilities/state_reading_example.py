@@ -1,12 +1,6 @@
-from robot import Robot
-from socket_handler import SocketHandler
-from inverse_kinematics import InverseKinematics
-import time
+from interactive_robot import IRobot
 
-robot = Robot(normalized=True)
-socket = SocketHandler()
-ik = InverseKinematics(robot_obj=robot)
-robot.start_reading_thread(socket_handler=socket)
+robot = IRobot(normalized=True)
 
 while True:
     joint_positions = robot.get_joint_positions()

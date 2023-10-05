@@ -2,8 +2,8 @@ from robot import Robot
 from socket_handler import SocketHandler
 from threading import Thread
 from helper_functions import checksum_fcn
+import signal
 import time
-
 
 class IRobot(Robot):
     VELOCITY = 1024
@@ -63,6 +63,11 @@ class IRobot(Robot):
             self.target_motor_states = [0] * 5  # 0 Not moving, 1 Increasing, 2 Decreasing
             self.sim_thread.start()
 
+        # Signal to catch shutdown
+        signal.signal(signal.SIGINT, self._exit_gracefully)
+        signal.signal(signal.SIGTERM, self._exit_gracefully)
+
+
     def move_robot(self, joint_positions, wait=False):
         """
         Main function for moving the arm, will set the current target variable to the joint_positions requested.  If
@@ -88,6 +93,12 @@ class IRobot(Robot):
         if wait:
             while self.at_target is False:
                 time.sleep(0.01)
+
+    def stop_robot(self):
+        """Stops all the robots threads and closes the socket connection"""
+        self._exit_gracefully(0,0)
+        self._socket_handler.sock.close()
+
 
     def _build_joints_packet(self):
         """
@@ -209,6 +220,12 @@ class IRobot(Robot):
 
             time.sleep(self.COMPARE_RATE)
 
+    def _exit_gracefully(self, signum, frame):
+        self._stop_reading_thread()
+
+        if self.virtual:
+            self._stop_sim_thread()
+
     def _get_joints_from_udp_loop(self):
         """
         While loop that constantly checks for UDP packets from brachIOplexus and updates robot_obj state when received
@@ -263,7 +280,7 @@ class IRobot(Robot):
             None
 
         """
-        print("Starting read packet thread, waiting for first packet")
+        print("Starting read packet thread, waiting for first packet...")
         self.reading_thread.start()
 
         # Make sure nothing else starts until a first packet is read

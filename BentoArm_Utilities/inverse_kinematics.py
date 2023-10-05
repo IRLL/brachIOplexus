@@ -127,7 +127,7 @@ class InverseKinematics:
         else:
             return position[0][3], position[1][3], position[2][3]  # Return X Y Z coordinates
 
-    def inverse_kinematics(self, target_position_xyz=(0, 0, 0), plot=True):
+    def inverse_kinematics(self, target_position_xyz=(0, 0, 0), plot=False):
         """
         A crude inverse kinematics lookup which estimates the joint positions needed to have the end effector reach a
         target_position position.  Will also check if the sum of the difference between goal and forward_kinematics calculation
@@ -199,7 +199,7 @@ class InverseKinematics:
             return joints
 
         else:
-            return [change_scale(-pi, pi, self.robot.DYNA_MIN, self.robot.DYNA_MAX, i) for i in ik_radians]
+            return [change_scale(-pi, pi, self.robot._joints[0].DYNA_MIN, self.robot._joints[0].DYNA_MAX, i) for i in ik_radians]
 
 
 def test_ik():
