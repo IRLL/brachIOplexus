@@ -20,7 +20,7 @@ def main():
     playback(file=recorder.filename, normalized=True, virtual=True)
 
     os.remove(recorder.filename)
-    input("Now record motion inside the simulator")
+    print("Now record motion inside the simulator")
 
     """Test dyna values joint_positions recording and playback"""
 

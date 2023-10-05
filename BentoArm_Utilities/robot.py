@@ -103,13 +103,21 @@ class MxSeries(ServoInfo):
     """
 
     MIN_ANGLES = [1028, 1784, 1028, 790, 1928]
+    """Minimum dyna values for each motor"""
     MAX_ANGLES = [3073, 2570, 3073, 3328, 2800]
+    """Max dyna values for each motor"""
     V_RANGE = [55, 45, 90, 67, 90]
+    """The allowable +- velocity range from 1024"""
     LOAD_RANGE = [225, 300, 250, 300, 400]
+    """The allowable +- load range from 1024"""
     MAX_TEMP = 80
+    """Max temperature"""
     BUFFER = 10
+    """Allowable distance off from min/max"""
     DYNA_MIN = 0
+    """The min value in the dynamixel range"""
     DYNA_MAX = 4095
+    """The max value in the dynamixel range"""
 
     def __init__(self, index):
         """
