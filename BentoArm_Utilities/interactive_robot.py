@@ -1,7 +1,7 @@
 from robot import Robot
 from socket_handler import SocketHandler
 from threading import Thread
-from helper_functions import checksum_fcn
+from helper_functions import checksum_fcn, change_scale
 import signal
 import time
 
@@ -210,7 +210,7 @@ class IRobot(Robot):
         while self.reading_thread_running:
             total_difference = 0
             for i in range(len(self._joints)):
-                total_difference += abs(self.target_position[i] - self.get_joint_positions()[i])
+                total_difference += abs(self.target_position[i] - self.get_joint_positions(normalized=False)[i])
 
             if total_difference > (self.TOLERANCE * len(self._joints)):
                 self.at_target = False
@@ -340,4 +340,11 @@ class IRobot(Robot):
         self._assert_velocities(velocities=velocities)
 
     def __repr__(self):
-        return f'Position: {self.get_joint_positions()}, Target: {self.target_position}, At Target: {self.at_target}'
+        if self.normalized:
+            target = []
+            for i in range(len(self._joints)):
+                target.append(change_scale(self._joints[i].position_min, self._joints[i].postion_max, 0, 1, self.target_position[i]))
+            return f'Position: {self.get_joint_positions()}, Target: {target}, At Target: {self.at_target}'
+
+        else:
+            return f'Position: {self.get_joint_positions()}, Target: {self.target_position}, At Target: {self.at_target}'
