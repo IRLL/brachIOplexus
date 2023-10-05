@@ -32,10 +32,10 @@ import select
 
 
 class SocketHandler:
-    def __init__(self):
+    def __init__(self, virtual=False):
         &#34;&#34;&#34;
         Socket handler used for UDP communication with BrachIOPlexus uses one port for sending and another for
-        receiving.  Due to the dual port nature of this setup it is best to have one thread constantly looking for
+        receiving.  Due to the dual port nature of this setup it is best to have one reading_thread constantly looking for
         packets and another sending when needed.
 
         Attributes:
@@ -44,27 +44,31 @@ class SocketHandler:
             udp_ip (string): The IP address of the computer/program that you want to send data to. Use 127.0.0.1 when communicating between two programs on the same computer.
             bufferSize (int): Buffer size for incoming bytes.  Default (1024)
             sock (socket): UDP socket
+            virtual: Whether sending movement packets to real arm, or simulated arm
         &#34;&#34;&#34;
-        self.port_tx = 30006
+        if virtual:
+            self.port_tx = 30004
+        else:
+            self.port_tx = 30006
         self.port_rx = 30007
         self.udp_ip = &#34;127.0.0.1&#34;
         self.buffer_size = 1024
         self.failed_packets = 0
 
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.sock.bind((self.udp_ip, self.port_rx))
+        self.sock.bind((&#34;127.0.0.1&#34;, self.port_rx))  # Binding to a blank address should look for all possible connections
         self.sock.setblocking(False)  # We don&#39;t want RX to block anything
 
     def read_packet(self):
         &#34;&#34;&#34;
-        Receives a BentoArm joint_positions packet (more about packet structure in README.md) , checks the checksum, and returns
-        the joint_positions message which contains all the information saved in a robot_obj.py ServoInfo class
+        Receives a BentoArm joint_positions packet (more about packet structure in google doc guide) , checks the
+        checksum, and returns the joint_positions message which contains all the information needed by the Robot object
         &#34;&#34;&#34;
         result = select.select([self.sock], [], [], 0.0)
         if len(result[0]) == 0:
             return None
         message = result[0][0].recv(self.buffer_size)
-        checksum = checksum_fcn(message[2:-1])  # Remove header and checksum
+        checksum = checksum_fcn(message[2:-1])  # Check checksum (does not include header and checksum in message)
         if message[0] == 0xFF and message[1] == 0xFF and checksum == message[-1]:
             # If header is correct and checksum is passed return the message
             return message
@@ -88,11 +92,12 @@ class SocketHandler:
 <dl>
 <dt id="socket_handler.SocketHandler"><code class="flex name class">
 <span>class <span class="ident">SocketHandler</span></span>
+<span>(</span><span>virtual=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Socket handler used for UDP communication with BrachIOPlexus uses one port for sending and another for
 receiving.
-Due to the dual port nature of this setup it is best to have one thread constantly looking for
+Due to the dual port nature of this setup it is best to have one reading_thread constantly looking for
 packets and another sending when needed.</p>
 <h2 id="attributes">Attributes</h2>
 <dl>
@@ -108,16 +113,18 @@ Default (30006)</dd>
 Default (1024)</dd>
 <dt><strong><code>sock</code></strong> :&ensp;<code>socket</code></dt>
 <dd>UDP socket</dd>
+<dt><strong><code>virtual</code></strong></dt>
+<dd>Whether sending movement packets to real arm, or simulated arm</dd>
 </dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class SocketHandler:
-    def __init__(self):
+    def __init__(self, virtual=False):
         &#34;&#34;&#34;
         Socket handler used for UDP communication with BrachIOPlexus uses one port for sending and another for
-        receiving.  Due to the dual port nature of this setup it is best to have one thread constantly looking for
+        receiving.  Due to the dual port nature of this setup it is best to have one reading_thread constantly looking for
         packets and another sending when needed.
 
         Attributes:
@@ -126,27 +133,31 @@ Default (1024)</dd>
             udp_ip (string): The IP address of the computer/program that you want to send data to. Use 127.0.0.1 when communicating between two programs on the same computer.
             bufferSize (int): Buffer size for incoming bytes.  Default (1024)
             sock (socket): UDP socket
+            virtual: Whether sending movement packets to real arm, or simulated arm
         &#34;&#34;&#34;
-        self.port_tx = 30006
+        if virtual:
+            self.port_tx = 30004
+        else:
+            self.port_tx = 30006
         self.port_rx = 30007
         self.udp_ip = &#34;127.0.0.1&#34;
         self.buffer_size = 1024
         self.failed_packets = 0
 
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.sock.bind((self.udp_ip, self.port_rx))
+        self.sock.bind((&#34;127.0.0.1&#34;, self.port_rx))  # Binding to a blank address should look for all possible connections
         self.sock.setblocking(False)  # We don&#39;t want RX to block anything
 
     def read_packet(self):
         &#34;&#34;&#34;
-        Receives a BentoArm joint_positions packet (more about packet structure in README.md) , checks the checksum, and returns
-        the joint_positions message which contains all the information saved in a robot_obj.py ServoInfo class
+        Receives a BentoArm joint_positions packet (more about packet structure in google doc guide) , checks the
+        checksum, and returns the joint_positions message which contains all the information needed by the Robot object
         &#34;&#34;&#34;
         result = select.select([self.sock], [], [], 0.0)
         if len(result[0]) == 0:
             return None
         message = result[0][0].recv(self.buffer_size)
-        checksum = checksum_fcn(message[2:-1])  # Remove header and checksum
+        checksum = checksum_fcn(message[2:-1])  # Check checksum (does not include header and checksum in message)
         if message[0] == 0xFF and message[1] == 0xFF and checksum == message[-1]:
             # If header is correct and checksum is passed return the message
             return message
@@ -164,22 +175,22 @@ Default (1024)</dd>
 <span>def <span class="ident">read_packet</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Receives a BentoArm joint_positions packet (more about packet structure in README.md) , checks the checksum, and returns
-the joint_positions message which contains all the information saved in a robot_obj.py ServoInfo class</p></div>
+<div class="desc"><p>Receives a BentoArm joint_positions packet (more about packet structure in google doc guide) , checks the
+checksum, and returns the joint_positions message which contains all the information needed by the Robot object</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def read_packet(self):
     &#34;&#34;&#34;
-    Receives a BentoArm joint_positions packet (more about packet structure in README.md) , checks the checksum, and returns
-    the joint_positions message which contains all the information saved in a robot_obj.py ServoInfo class
+    Receives a BentoArm joint_positions packet (more about packet structure in google doc guide) , checks the
+    checksum, and returns the joint_positions message which contains all the information needed by the Robot object
     &#34;&#34;&#34;
     result = select.select([self.sock], [], [], 0.0)
     if len(result[0]) == 0:
         return None
     message = result[0][0].recv(self.buffer_size)
-    checksum = checksum_fcn(message[2:-1])  # Remove header and checksum
+    checksum = checksum_fcn(message[2:-1])  # Check checksum (does not include header and checksum in message)
     if message[0] == 0xFF and message[1] == 0xFF and checksum == message[-1]:
         # If header is correct and checksum is passed return the message
         return message

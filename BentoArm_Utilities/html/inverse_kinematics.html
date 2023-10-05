@@ -46,7 +46,7 @@ class InverseKinematics:
             robot_obj (Robot): Robot class which is needed for the joint min and max positions
 
         Attributes:
-            bento_chain (Chain): IKPy Chain, a collection of links and __joints representing the bento arm
+            bento_chain (Chain): IKPy Chain, a collection of links and _joints representing the bento arm
             max_error (float): Total allowable IK lookup error ( goal_position - position calculated by IK )
         &#34;&#34;&#34;
 
@@ -76,7 +76,7 @@ class InverseKinematics:
                 origin_orientation=[pi, 0, 0],
                 joint_type=&#34;revolute&#34;,
                 rotation=[0, 0, 1],
-                bounds=(self.robot.get_joints()[0].radians_min, self.robot.get_joints()[0].radians_max)
+                bounds=(self.robot.get_joint_objects()[0].radians_min, self.robot.get_joint_objects()[0].radians_max)
             ),
             URDFLink(
                 name=&#34;shoulder_to_elbow&#34;,
@@ -84,7 +84,7 @@ class InverseKinematics:
                 origin_orientation=[0, 0, 0],
                 joint_type=&#34;revolute&#34;,
                 rotation=[0, 1, 0],
-                bounds=(self.robot.get_joints()[1].radians_min, self.robot.get_joints()[1].radians_max)
+                bounds=(self.robot.get_joint_objects()[1].radians_min, self.robot.get_joint_objects()[1].radians_max)
             ),
             URDFLink(
                 name=&#34;elbow_to_forearm&#34;,
@@ -92,7 +92,7 @@ class InverseKinematics:
                 origin_orientation=[0, 0, 0],
                 joint_type=&#34;revolute&#34;,
                 rotation=[1, 0, 0],
-                bounds=(self.robot.get_joints()[2].radians_min, self.robot.get_joints()[2].radians_max)
+                bounds=(self.robot.get_joint_objects()[2].radians_min, self.robot.get_joint_objects()[2].radians_max)
             ),
             URDFLink(
                 name=&#34;forearm_to_wrist&#34;,
@@ -100,7 +100,7 @@ class InverseKinematics:
                 origin_orientation=[0, 0, 0],
                 joint_type=&#34;revolute&#34;,
                 rotation=[0, 1, 0],
-                bounds=(self.robot.get_joints()[3].radians_min, self.robot.get_joints()[3].radians_max)
+                bounds=(self.robot.get_joint_objects()[3].radians_min, self.robot.get_joint_objects()[3].radians_max)
             ),
             URDFLink(
                 name=&#34;wrist_to_hand&#34;,
@@ -158,7 +158,7 @@ class InverseKinematics:
     def inverse_kinematics(self, target_position_xyz=(0, 0, 0), plot=True):
         &#34;&#34;&#34;
         A crude inverse kinematics lookup which estimates the joint positions needed to have the end effector reach a
-        target position.  Will also check if the sum of the difference between goal and forward_kinematics calculation
+        target_position position.  Will also check if the sum of the difference between goal and forward_kinematics calculation
         is greater than self.max_error if so will give an input warning.
 
         Args:
@@ -179,7 +179,7 @@ class InverseKinematics:
             self.plot_state(joints)
         return joints
 
-    def get_end_effector_position(self):
+    def get_end_effector_position_xyz(self):
         &#34;&#34;&#34;
         Converts the current joint positions read by the brachIOplexus packet / Robot class and calculates the position
         of the end effector in 3D space (cm)
@@ -191,15 +191,15 @@ class InverseKinematics:
         if self.robot.normalized:
             joints_to_ik = [change_scale(old_min=0,
                                          old_max=1,
-                                         new_min=self.robot.get_joints()[i].radians_min,
-                                         new_max=self.robot.get_joints()[i].radians_max,
-                                         value=self.robot.get_joints()[i].get_normalized_joint_position()) for i in range(4)]
+                                         new_min=self.robot.get_joint_objects()[i].radians_min,
+                                         new_max=self.robot.get_joint_objects()[i].radians_max,
+                                         value=self.robot.get_joint_objects()[i].get_normalized_joint_position()) for i in range(4)]
         else:
             joints_to_ik = [change_scale(old_min=self.robot.DYNA_MIN,
                                          old_max=self.robot.DYNA_MAX,
                                          new_min=-pi,
                                          new_max=pi,
-                                         value=self.robot.get_joints()[i].position) for i in range(4)]
+                                         value=self.robot.get_joint_objects()[i].position) for i in range(4)]
         return self.forward_kinematics(joints_to_ik, matrix=False)
 
     def get_joints_for_goal_xyz(self, goal_xyz, hand_state=&#34;mid&#34;):
@@ -211,15 +211,15 @@ class InverseKinematics:
             hand_state: possible options include &#34;closed&#34;, &#34;mid&#34;, and &#34;open&#34;
 
         Returns:
-            A collection of __joints required by the Robot class
+            A collection of joint positions required by the Robot class
 
         &#34;&#34;&#34;
         ik_radians = self.inverse_kinematics(goal_xyz)[3:8]
         ik_radians[-1] = self.robot.hand_states[hand_state]
         # IKPY returns in [-pi, pi], need in [0,4096] or [0,1]
         if self.robot.normalized:
-            joints = [change_scale(old_min=self.robot.get_joints()[i].radians_min,
-                                   old_max=self.robot.get_joints()[i].radians_max,
+            joints = [change_scale(old_min=self.robot.get_joint_objects()[i].radians_min,
+                                   old_max=self.robot.get_joint_objects()[i].radians_max,
                                    new_min=0,
                                    new_max=1,
                                    value=ik_radians[i]) for i in range(5)]
@@ -331,7 +331,7 @@ using the solidworks model.</p>
 <h2 id="attributes">Attributes</h2>
 <dl>
 <dt><strong><code>bento_chain</code></strong> :&ensp;<code>Chain</code></dt>
-<dd>IKPy Chain, a collection of links and __joints representing the bento arm</dd>
+<dd>IKPy Chain, a collection of links and _joints representing the bento arm</dd>
 <dt><strong><code>max_error</code></strong> :&ensp;<code>float</code></dt>
 <dd>Total allowable IK lookup error ( goal_position - position calculated by IK )</dd>
 </dl></div>
@@ -351,7 +351,7 @@ using the solidworks model.</p>
             robot_obj (Robot): Robot class which is needed for the joint min and max positions
 
         Attributes:
-            bento_chain (Chain): IKPy Chain, a collection of links and __joints representing the bento arm
+            bento_chain (Chain): IKPy Chain, a collection of links and _joints representing the bento arm
             max_error (float): Total allowable IK lookup error ( goal_position - position calculated by IK )
         &#34;&#34;&#34;
 
@@ -381,7 +381,7 @@ using the solidworks model.</p>
                 origin_orientation=[pi, 0, 0],
                 joint_type=&#34;revolute&#34;,
                 rotation=[0, 0, 1],
-                bounds=(self.robot.get_joints()[0].radians_min, self.robot.get_joints()[0].radians_max)
+                bounds=(self.robot.get_joint_objects()[0].radians_min, self.robot.get_joint_objects()[0].radians_max)
             ),
             URDFLink(
                 name=&#34;shoulder_to_elbow&#34;,
@@ -389,7 +389,7 @@ using the solidworks model.</p>
                 origin_orientation=[0, 0, 0],
                 joint_type=&#34;revolute&#34;,
                 rotation=[0, 1, 0],
-                bounds=(self.robot.get_joints()[1].radians_min, self.robot.get_joints()[1].radians_max)
+                bounds=(self.robot.get_joint_objects()[1].radians_min, self.robot.get_joint_objects()[1].radians_max)
             ),
             URDFLink(
                 name=&#34;elbow_to_forearm&#34;,
@@ -397,7 +397,7 @@ using the solidworks model.</p>
                 origin_orientation=[0, 0, 0],
                 joint_type=&#34;revolute&#34;,
                 rotation=[1, 0, 0],
-                bounds=(self.robot.get_joints()[2].radians_min, self.robot.get_joints()[2].radians_max)
+                bounds=(self.robot.get_joint_objects()[2].radians_min, self.robot.get_joint_objects()[2].radians_max)
             ),
             URDFLink(
                 name=&#34;forearm_to_wrist&#34;,
@@ -405,7 +405,7 @@ using the solidworks model.</p>
                 origin_orientation=[0, 0, 0],
                 joint_type=&#34;revolute&#34;,
                 rotation=[0, 1, 0],
-                bounds=(self.robot.get_joints()[3].radians_min, self.robot.get_joints()[3].radians_max)
+                bounds=(self.robot.get_joint_objects()[3].radians_min, self.robot.get_joint_objects()[3].radians_max)
             ),
             URDFLink(
                 name=&#34;wrist_to_hand&#34;,
@@ -463,7 +463,7 @@ using the solidworks model.</p>
     def inverse_kinematics(self, target_position_xyz=(0, 0, 0), plot=True):
         &#34;&#34;&#34;
         A crude inverse kinematics lookup which estimates the joint positions needed to have the end effector reach a
-        target position.  Will also check if the sum of the difference between goal and forward_kinematics calculation
+        target_position position.  Will also check if the sum of the difference between goal and forward_kinematics calculation
         is greater than self.max_error if so will give an input warning.
 
         Args:
@@ -484,7 +484,7 @@ using the solidworks model.</p>
             self.plot_state(joints)
         return joints
 
-    def get_end_effector_position(self):
+    def get_end_effector_position_xyz(self):
         &#34;&#34;&#34;
         Converts the current joint positions read by the brachIOplexus packet / Robot class and calculates the position
         of the end effector in 3D space (cm)
@@ -496,15 +496,15 @@ using the solidworks model.</p>
         if self.robot.normalized:
             joints_to_ik = [change_scale(old_min=0,
                                          old_max=1,
-                                         new_min=self.robot.get_joints()[i].radians_min,
-                                         new_max=self.robot.get_joints()[i].radians_max,
-                                         value=self.robot.get_joints()[i].get_normalized_joint_position()) for i in range(4)]
+                                         new_min=self.robot.get_joint_objects()[i].radians_min,
+                                         new_max=self.robot.get_joint_objects()[i].radians_max,
+                                         value=self.robot.get_joint_objects()[i].get_normalized_joint_position()) for i in range(4)]
         else:
             joints_to_ik = [change_scale(old_min=self.robot.DYNA_MIN,
                                          old_max=self.robot.DYNA_MAX,
                                          new_min=-pi,
                                          new_max=pi,
-                                         value=self.robot.get_joints()[i].position) for i in range(4)]
+                                         value=self.robot.get_joint_objects()[i].position) for i in range(4)]
         return self.forward_kinematics(joints_to_ik, matrix=False)
 
     def get_joints_for_goal_xyz(self, goal_xyz, hand_state=&#34;mid&#34;):
@@ -516,15 +516,15 @@ using the solidworks model.</p>
             hand_state: possible options include &#34;closed&#34;, &#34;mid&#34;, and &#34;open&#34;
 
         Returns:
-            A collection of __joints required by the Robot class
+            A collection of joint positions required by the Robot class
 
         &#34;&#34;&#34;
         ik_radians = self.inverse_kinematics(goal_xyz)[3:8]
         ik_radians[-1] = self.robot.hand_states[hand_state]
         # IKPY returns in [-pi, pi], need in [0,4096] or [0,1]
         if self.robot.normalized:
-            joints = [change_scale(old_min=self.robot.get_joints()[i].radians_min,
-                                   old_max=self.robot.get_joints()[i].radians_max,
+            joints = [change_scale(old_min=self.robot.get_joint_objects()[i].radians_min,
+                                   old_max=self.robot.get_joint_objects()[i].radians_max,
                                    new_min=0,
                                    new_max=1,
                                    value=ik_radians[i]) for i in range(5)]
@@ -571,8 +571,8 @@ using the solidworks model.</p>
         return position[0][3], position[1][3], position[2][3]  # Return X Y Z coordinates</code></pre>
 </details>
 </dd>
-<dt id="inverse_kinematics.InverseKinematics.get_end_effector_position"><code class="name flex">
-<span>def <span class="ident">get_end_effector_position</span></span>(<span>self)</span>
+<dt id="inverse_kinematics.InverseKinematics.get_end_effector_position_xyz"><code class="name flex">
+<span>def <span class="ident">get_end_effector_position_xyz</span></span>(<span>self)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Converts the current joint positions read by the brachIOplexus packet / Robot class and calculates the position
@@ -583,7 +583,7 @@ of the end effector in 3D space (cm)</p>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def get_end_effector_position(self):
+<pre><code class="python">def get_end_effector_position_xyz(self):
     &#34;&#34;&#34;
     Converts the current joint positions read by the brachIOplexus packet / Robot class and calculates the position
     of the end effector in 3D space (cm)
@@ -595,15 +595,15 @@ of the end effector in 3D space (cm)</p>
     if self.robot.normalized:
         joints_to_ik = [change_scale(old_min=0,
                                      old_max=1,
-                                     new_min=self.robot.get_joints()[i].radians_min,
-                                     new_max=self.robot.get_joints()[i].radians_max,
-                                     value=self.robot.get_joints()[i].get_normalized_joint_position()) for i in range(4)]
+                                     new_min=self.robot.get_joint_objects()[i].radians_min,
+                                     new_max=self.robot.get_joint_objects()[i].radians_max,
+                                     value=self.robot.get_joint_objects()[i].get_normalized_joint_position()) for i in range(4)]
     else:
         joints_to_ik = [change_scale(old_min=self.robot.DYNA_MIN,
                                      old_max=self.robot.DYNA_MAX,
                                      new_min=-pi,
                                      new_max=pi,
-                                     value=self.robot.get_joints()[i].position) for i in range(4)]
+                                     value=self.robot.get_joint_objects()[i].position) for i in range(4)]
     return self.forward_kinematics(joints_to_ik, matrix=False)</code></pre>
 </details>
 </dd>
@@ -620,7 +620,7 @@ of the end effector in 3D space (cm)</p>
 <dd>possible options include "closed", "mid", and "open"</dd>
 </dl>
 <h2 id="returns">Returns</h2>
-<p>A collection of __joints required by the Robot class</p></div>
+<p>A collection of joint positions required by the Robot class</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -634,15 +634,15 @@ of the end effector in 3D space (cm)</p>
         hand_state: possible options include &#34;closed&#34;, &#34;mid&#34;, and &#34;open&#34;
 
     Returns:
-        A collection of __joints required by the Robot class
+        A collection of joint positions required by the Robot class
 
     &#34;&#34;&#34;
     ik_radians = self.inverse_kinematics(goal_xyz)[3:8]
     ik_radians[-1] = self.robot.hand_states[hand_state]
     # IKPY returns in [-pi, pi], need in [0,4096] or [0,1]
     if self.robot.normalized:
-        joints = [change_scale(old_min=self.robot.get_joints()[i].radians_min,
-                               old_max=self.robot.get_joints()[i].radians_max,
+        joints = [change_scale(old_min=self.robot.get_joint_objects()[i].radians_min,
+                               old_max=self.robot.get_joint_objects()[i].radians_max,
                                new_min=0,
                                new_max=1,
                                value=ik_radians[i]) for i in range(5)]
@@ -657,7 +657,7 @@ of the end effector in 3D space (cm)</p>
 </code></dt>
 <dd>
 <div class="desc"><p>A crude inverse kinematics lookup which estimates the joint positions needed to have the end effector reach a
-target position.
+target_position position.
 Will also check if the sum of the difference between goal and forward_kinematics calculation
 is greater than self.max_error if so will give an input warning.</p>
 <h2 id="args">Args</h2>
@@ -675,7 +675,7 @@ is greater than self.max_error if so will give an input warning.</p>
 <pre><code class="python">def inverse_kinematics(self, target_position_xyz=(0, 0, 0), plot=True):
     &#34;&#34;&#34;
     A crude inverse kinematics lookup which estimates the joint positions needed to have the end effector reach a
-    target position.  Will also check if the sum of the difference between goal and forward_kinematics calculation
+    target_position position.  Will also check if the sum of the difference between goal and forward_kinematics calculation
     is greater than self.max_error if so will give an input warning.
 
     Args:
@@ -750,7 +750,7 @@ is greater than self.max_error if so will give an input warning.</p>
 <h4><code><a title="inverse_kinematics.InverseKinematics" href="#inverse_kinematics.InverseKinematics">InverseKinematics</a></code></h4>
 <ul class="">
 <li><code><a title="inverse_kinematics.InverseKinematics.forward_kinematics" href="#inverse_kinematics.InverseKinematics.forward_kinematics">forward_kinematics</a></code></li>
-<li><code><a title="inverse_kinematics.InverseKinematics.get_end_effector_position" href="#inverse_kinematics.InverseKinematics.get_end_effector_position">get_end_effector_position</a></code></li>
+<li><code><a title="inverse_kinematics.InverseKinematics.get_end_effector_position_xyz" href="#inverse_kinematics.InverseKinematics.get_end_effector_position_xyz">get_end_effector_position_xyz</a></code></li>
 <li><code><a title="inverse_kinematics.InverseKinematics.get_joints_for_goal_xyz" href="#inverse_kinematics.InverseKinematics.get_joints_for_goal_xyz">get_joints_for_goal_xyz</a></code></li>
 <li><code><a title="inverse_kinematics.InverseKinematics.inverse_kinematics" href="#inverse_kinematics.InverseKinematics.inverse_kinematics">inverse_kinematics</a></code></li>
 <li><code><a title="inverse_kinematics.InverseKinematics.plot_state" href="#inverse_kinematics.InverseKinematics.plot_state">plot_state</a></code></li>

@@ -15,4 +15,4 @@ while True:
     print(f"\n {ik.get_end_effector_position_xyz()} \n")
     time.sleep(0.2)
 
-robot.stop_reading_thread()
+robot._stop_reading_thread()

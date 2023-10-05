@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def change_scale(old_min, old_max, new_min, new_max, value):
     """
     Converts value in [old_min, old_max] proportionally to [new_min, new_max]
@@ -28,7 +29,7 @@ def fill_state(state):
     # Default full joint_positions value
     if len(state) == 9:
         return state
-    # Else append 4 joint joint_positions to nine joint joint_positions to account for fixed __joints
+    # Else append 4 joint joint_positions to nine joint joint_positions to account for fixed _joints
     for i in range(3):
         state.insert(0, None)
     for i in range(2):
@@ -37,8 +38,9 @@ def fill_state(state):
 
 
 def get_diff_xyz(first, second):
+    """Finds the difference between two arrays/tuples"""
     total_diff = 0
-    assert(len(first) == len(second))
+    assert (len(first) == len(second))
     for i in range(len(first)):
-        total_diff += abs(first[i]-second[i])
+        total_diff += abs(first[i] - second[i])
     return total_diff
