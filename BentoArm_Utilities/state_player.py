@@ -26,7 +26,7 @@ def playback(file, normalized, virtual=False):
                     assert (int(float(
                         state[0])) > 1), "Value read not in dyna motor range, did you set normalized correctly?"
                 done_check = True
-            robot.move_robot(state, wait=False)
+            robot.move(state, wait=False)
             time.sleep(RATE)
         print(f"Playback Time: {time.time() - start_time}")
 

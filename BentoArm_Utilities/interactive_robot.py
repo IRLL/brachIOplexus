@@ -41,6 +41,7 @@ class IRobot(Robot):
         self.virtual = virtual
         self.at_target = False
         self.compare_target = compare_target
+        self.timeout = 10  # Seconds before waiting to move arm times out
 
         # Threads
         self.first_packet_read = False
@@ -68,7 +69,7 @@ class IRobot(Robot):
         signal.signal(signal.SIGINT, self._exit_gracefully)
         signal.signal(signal.SIGTERM, self._exit_gracefully)
 
-    def move_robot(self, joint_positions, wait=False):
+    def move(self, joint_positions, wait=False):
         """
         Main function for moving the arm, will set the current target variable to the joint_positions requested.  If
         running in the simulator thread will handle sending velocity updates.  For the real arm we send
@@ -91,7 +92,11 @@ class IRobot(Robot):
             self._socket_handler.send_packet(packet)
 
         if wait:
+            start_time = time.time()
             while self.at_target is False:
+                if time.time() - start_time > 10:
+                    print("Moving robot timed out")
+                    break
                 time.sleep(0.01)
 
     def stop_robot(self):
@@ -348,3 +353,4 @@ class IRobot(Robot):
 
         else:
             return f'Position: {self.get_joint_positions()}, Target: {self.target_position}, At Target: {self.at_target}'
+

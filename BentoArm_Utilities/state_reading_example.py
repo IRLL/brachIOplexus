@@ -1,6 +1,9 @@
 from interactive_robot import IRobot
+from inverse_kinematics import InverseKinematics
+import time
 
 robot = IRobot(normalized=True)
+ik = InverseKinematics(robot_obj=robot)
 
 while True:
     joint_positions = robot.get_joint_positions()
@@ -9,4 +12,4 @@ while True:
     print(f"\n {ik.get_end_effector_position_xyz()} \n")
     time.sleep(0.2)
 
-robot._stop_reading_thread()
+robot.stop_robot()
