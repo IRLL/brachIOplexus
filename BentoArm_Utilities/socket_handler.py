@@ -4,7 +4,7 @@ import select
 
 
 class SocketHandler:
-    def __init__(self, virtual=False):
+    def __init__(self, virtual=False, remote=None):
         """
         Socket handler used for UDP communication with BrachIOPlexus uses one port for sending and another for
         receiving.  Due to the dual port nature of this setup it is best to have one reading_thread constantly looking for
@@ -23,13 +23,16 @@ class SocketHandler:
         else:
             self.port_tx = 30006
         self.port_rx = 30007
-        self.udp_ip = "127.0.0.1"
+        if remote:
+            self.udp_ip = "192.168.1.69"
+        else:
+            self.udp_ip = "127.0.0.1"
         self.buffer_size = 1024
         self.failed_packets = 0
 
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.sock.bind(
-            ("127.0.0.1", self.port_rx))  # Binding to a blank address should look for all possible connections
+            ("", self.port_rx))  # Binding to a blank address should look for all possible connections
         self.sock.setblocking(False)  # We don't want RX to block anything
 
     def read_packet(self):

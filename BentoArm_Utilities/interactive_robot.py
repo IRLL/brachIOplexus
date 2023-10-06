@@ -21,7 +21,7 @@ class IRobot(Robot):
     READING_RATE = 1 / 500  # RATE = 1 / hz
     """The rate data is read from Dynamixel"""
 
-    def __init__(self, normalized=True, virtual=False, compare_target=True):
+    def __init__(self, normalized=True, virtual=False, compare_target=True, remote=None):
         """
         Interactive Robot is a child of Robot class but contains methods for reading robot states and sending movement
         targets.  Methods operate the same four both virtual and real life robot. Important to remember that real robot
@@ -35,7 +35,7 @@ class IRobot(Robot):
 
         super().__init__(normalized=normalized)  # Call parent class constructor
 
-        self._socket_handler = SocketHandler(virtual=virtual)
+        self._socket_handler = SocketHandler(virtual=virtual, remote=remote)
         self.target_position = [2048] * 5  # Targets are always in dyna range
         self.target_velocity = [self.VELOCITY] * 5  # Velocities for real world robot
         self.virtual = virtual
