@@ -24,11 +24,11 @@ class Robot:
 
         Attributes:
             _joints (list): A list of MxSeries joints
-            hand_states (dict): Hand states in the range of [-π,π] mainly just used by IKPY
+            _hand_states (dict): Hand states in the range of [-π,π] mainly just used by IKPY
         """
         self.normalized = normalized
         self._joints = [MxSeries(index=i) for i in range(5)]
-        self.hand_states = {"closed": -0.15, "mid": 0.24, "open": 1.1428}
+        self._hand_states = {"closed": -0.15, "mid": 0.24, "open": 1.1428}
 
     def _get_joint_objects(self):
         """Getter for joints object so they remain private"""

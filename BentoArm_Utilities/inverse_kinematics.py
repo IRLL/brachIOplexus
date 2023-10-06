@@ -188,7 +188,7 @@ class InverseKinematics:
 
         """
         ik_radians = self.inverse_kinematics(goal_xyz)[3:8]
-        ik_radians[-1] = self.robot.hand_states[hand_state]
+        ik_radians[-1] = self.robot._hand_states[hand_state]
         # IKPY returns in [-pi, pi], need in [0,4096] or [0,1]
         if self.robot.normalized:
             joints = [change_scale(old_min=self.robot._get_joint_objects()[i].radians_min,
