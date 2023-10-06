@@ -7,7 +7,7 @@ class SocketHandler:
     def __init__(self, virtual=False, remote=False):
         """
         Socket handler used for UDP communication with BrachIOPlexus uses one port for sending and another for
-        receiving.  Due to the dual port nature of this setup it is best to have one reading_thread constantly looking for
+        receiving.  Due to the dual port nature of this setup it is best to have one _reading_thread constantly looking for
         packets and another sending when needed.
 
         Args:

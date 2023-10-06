@@ -1,6 +1,8 @@
 import csv
-from socket_handler import SocketHandler
+
 from interactive_robot import IRobot
+robot = IRobot(remote=True)
+
 import sys
 import os.path
 import time

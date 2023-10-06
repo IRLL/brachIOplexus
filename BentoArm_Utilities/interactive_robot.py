@@ -48,24 +48,24 @@ class IRobot(Robot):
         # Threads
         self.first_packet_read = False
         self.reading_thread_running = False
-        self.reading_thread = Thread(target=self._get_joints_from_udp_loop)
+        self._reading_thread = Thread(target=self._get_joints_from_udp_loop)
 
         # Start the reading thread, it will block until first packet received
         self._start_reading_thread()
 
         # Target thread compares current position to goal position
         if compare_target:
-            self.target_thread = Thread(target=self._compare_current_to_target)
+            self._target_thread = Thread(target=self._compare_current_to_target)
             # Start comparison thread
-            self.target_thread.start()
+            self._target_thread.start()
 
         if virtual:
             self.target_velocity = [self.SIM_VELOCITY] * 5  # Velocities for virtual robot
             self.sim_thread_running = False
-            self.sim_thread = Thread(target=self._publish_sim_motor_states)
+            self._sim_thread = Thread(target=self._publish_sim_motor_states)
             # Only used by simulator
-            self.target_motor_states = [0] * 5  # 0 Not moving, 1 Increasing, 2 Decreasing
-            self.sim_thread.start()
+            self._target_motor_states = [0] * 5  # 0 Not moving, 1 Increasing, 2 Decreasing
+            self._sim_thread.start()
 
         # Signal to catch shutdown
         signal.signal(signal.SIGINT, self._exit_gracefully)
@@ -129,13 +129,13 @@ class IRobot(Robot):
             joint_positions = self.get_joint_positions(normalized=False)
             for i in range(len(joint_positions)):
                 if abs((joint_positions[i] - self.target_position[i])) < self.TOLERANCE:
-                    self.target_motor_states[i] = 0
+                    self._target_motor_states[i] = 0
                 elif self._joints[i].position_min > joint_positions[i] > self._joints[i].position_max:
-                    self.target_motor_states[i] = 0
+                    self._target_motor_states[i] = 0
                 elif joint_positions[i] > self.target_position[i]:
-                    self.target_motor_states[i] = 2
+                    self._target_motor_states[i] = 2
                 else:
-                    self.target_motor_states[i] = 1
+                    self._target_motor_states[i] = 1
 
             packet = [0xFF, 0xFF, 1, 4 * len(self._joints)]  # Length = 4 bytes (pos + vel) per joint
             for i in range(len(self._joints)):
@@ -143,7 +143,7 @@ class IRobot(Robot):
                 packet.append(i)
                 packet.append(self.target_velocity[i] & 0xFF)
                 packet.append((self.target_velocity[i] >> 8) & 0xFF)
-                packet.append(self.target_motor_states[i] & 0xFF)
+                packet.append(self._target_motor_states[i] & 0xFF)
             packet.append(checksum_fcn(packet[2:]))  # Append checksum function to end
             return bytearray(packet)
         else:
@@ -276,7 +276,7 @@ class IRobot(Robot):
 
     def _start_reading_thread(self):
         """
-        Starts the reading_thread that receives packets from brachIOPlexus and updates the robots state.  This will
+        Starts the _reading_thread that receives packets from brachIOPlexus and updates the robots state.  This will
         block until the first packet is read.
 
         Args:
@@ -287,7 +287,7 @@ class IRobot(Robot):
 
         """
         print("Starting read packet thread, waiting for first packet...")
-        self.reading_thread.start()
+        self._reading_thread.start()
 
         # Make sure nothing else starts until a first packet is read
         while self.first_packet_read is False:
@@ -296,13 +296,13 @@ class IRobot(Robot):
 
     def _stop_reading_thread(self):
         self.reading_thread_running = False
-        self.reading_thread.join()
+        self._reading_thread.join()
         if self.compare_target:
-            self.target_thread.join()
+            self._target_thread.join()
 
     def _stop_sim_thread(self):
         self.sim_thread_running = False
-        self.sim_thread.join()
+        self._sim_thread.join()
 
     def _update_joints_from_packet(self, packet):
         """

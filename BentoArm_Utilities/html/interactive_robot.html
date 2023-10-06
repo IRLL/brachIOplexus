@@ -29,9 +29,10 @@
 <pre><code class="python">from robot import Robot
 from socket_handler import SocketHandler
 from threading import Thread
-from helper_functions import checksum_fcn
+from helper_functions import checksum_fcn, change_scale
 import signal
 import time
+
 
 class IRobot(Robot):
     VELOCITY = 1024
@@ -48,7 +49,7 @@ class IRobot(Robot):
     READING_RATE = 1 / 500  # RATE = 1 / hz
     &#34;&#34;&#34;The rate data is read from Dynamixel&#34;&#34;&#34;
 
-    def __init__(self, normalized=True, virtual=False, compare_target=True):
+    def __init__(self, normalized=True, virtual=False, compare_target=True, remote=False):
         &#34;&#34;&#34;
         Interactive Robot is a child of Robot class but contains methods for reading robot states and sending movement
         targets.  Methods operate the same four both virtual and real life robot. Important to remember that real robot
@@ -58,45 +59,47 @@ class IRobot(Robot):
         Args:
             normalized:  If true joint joint_positions is represented via a [0, 1] range else the dynamixel range [0,4095]
             virtual: If true interacting with Unity robot, if false using real robot
+            compare_target: If True will start a thread that compares current position to target position (this is best disabled when recording states)
+            remote: If True will send packets to IRL Laptop (192.168.1.69) instead of local host
         &#34;&#34;&#34;
 
         super().__init__(normalized=normalized)  # Call parent class constructor
 
-        self._socket_handler = SocketHandler(virtual=virtual)
+        self._socket_handler = SocketHandler(virtual=virtual, remote=remote)
         self.target_position = [2048] * 5  # Targets are always in dyna range
         self.target_velocity = [self.VELOCITY] * 5  # Velocities for real world robot
         self.virtual = virtual
         self.at_target = False
         self.compare_target = compare_target
+        self.timeout = 10  # Seconds before waiting to move arm times out
 
         # Threads
         self.first_packet_read = False
         self.reading_thread_running = False
-        self.reading_thread = Thread(target=self._get_joints_from_udp_loop)
+        self._reading_thread = Thread(target=self._get_joints_from_udp_loop)
 
         # Start the reading thread, it will block until first packet received
         self._start_reading_thread()
 
         # Target thread compares current position to goal position
         if compare_target:
-            self.target_thread = Thread(target=self._compare_current_to_target)
+            self._target_thread = Thread(target=self._compare_current_to_target)
             # Start comparison thread
-            self.target_thread.start()
+            self._target_thread.start()
 
         if virtual:
             self.target_velocity = [self.SIM_VELOCITY] * 5  # Velocities for virtual robot
             self.sim_thread_running = False
-            self.sim_thread = Thread(target=self._publish_sim_motor_states)
+            self._sim_thread = Thread(target=self._publish_sim_motor_states)
             # Only used by simulator
-            self.target_motor_states = [0] * 5  # 0 Not moving, 1 Increasing, 2 Decreasing
-            self.sim_thread.start()
+            self._target_motor_states = [0] * 5  # 0 Not moving, 1 Increasing, 2 Decreasing
+            self._sim_thread.start()
 
         # Signal to catch shutdown
         signal.signal(signal.SIGINT, self._exit_gracefully)
         signal.signal(signal.SIGTERM, self._exit_gracefully)
 
-
-    def move_robot(self, joint_positions, wait=False):
+    def move(self, joint_positions, wait=False):
         &#34;&#34;&#34;
         Main function for moving the arm, will set the current target variable to the joint_positions requested.  If
         running in the simulator thread will handle sending velocity updates.  For the real arm we send
@@ -119,14 +122,17 @@ class IRobot(Robot):
             self._socket_handler.send_packet(packet)
 
         if wait:
+            start_time = time.time()
             while self.at_target is False:
+                if time.time() - start_time &gt; 10:
+                    print(&#34;Moving robot timed out&#34;)
+                    break
                 time.sleep(0.01)
 
     def stop_robot(self):
         &#34;&#34;&#34;Stops all the robots threads and closes the socket connection&#34;&#34;&#34;
-        self._exit_gracefully(0,0)
+        self._exit_gracefully(0, 0)
         self._socket_handler.sock.close()
-
 
     def _build_joints_packet(self):
         &#34;&#34;&#34;
@@ -151,13 +157,13 @@ class IRobot(Robot):
             joint_positions = self.get_joint_positions(normalized=False)
             for i in range(len(joint_positions)):
                 if abs((joint_positions[i] - self.target_position[i])) &lt; self.TOLERANCE:
-                    self.target_motor_states[i] = 0
+                    self._target_motor_states[i] = 0
                 elif self._joints[i].position_min &gt; joint_positions[i] &gt; self._joints[i].position_max:
-                    self.target_motor_states[i] = 0
+                    self._target_motor_states[i] = 0
                 elif joint_positions[i] &gt; self.target_position[i]:
-                    self.target_motor_states[i] = 2
+                    self._target_motor_states[i] = 2
                 else:
-                    self.target_motor_states[i] = 1
+                    self._target_motor_states[i] = 1
 
             packet = [0xFF, 0xFF, 1, 4 * len(self._joints)]  # Length = 4 bytes (pos + vel) per joint
             for i in range(len(self._joints)):
@@ -165,7 +171,7 @@ class IRobot(Robot):
                 packet.append(i)
                 packet.append(self.target_velocity[i] &amp; 0xFF)
                 packet.append((self.target_velocity[i] &gt;&gt; 8) &amp; 0xFF)
-                packet.append(self.target_motor_states[i] &amp; 0xFF)
+                packet.append(self._target_motor_states[i] &amp; 0xFF)
             packet.append(checksum_fcn(packet[2:]))  # Append checksum function to end
             return bytearray(packet)
         else:
@@ -239,7 +245,7 @@ class IRobot(Robot):
         while self.reading_thread_running:
             total_difference = 0
             for i in range(len(self._joints)):
-                total_difference += abs(self.target_position[i] - self.get_joint_positions()[i])
+                total_difference += abs(self.target_position[i] - self.get_joint_positions(normalized=False)[i])
 
             if total_difference &gt; (self.TOLERANCE * len(self._joints)):
                 self.at_target = False
@@ -298,7 +304,7 @@ class IRobot(Robot):
 
     def _start_reading_thread(self):
         &#34;&#34;&#34;
-        Starts the reading_thread that receives packets from brachIOPlexus and updates the robots state.  This will
+        Starts the _reading_thread that receives packets from brachIOPlexus and updates the robots state.  This will
         block until the first packet is read.
 
         Args:
@@ -309,7 +315,7 @@ class IRobot(Robot):
 
         &#34;&#34;&#34;
         print(&#34;Starting read packet thread, waiting for first packet...&#34;)
-        self.reading_thread.start()
+        self._reading_thread.start()
 
         # Make sure nothing else starts until a first packet is read
         while self.first_packet_read is False:
@@ -318,13 +324,13 @@ class IRobot(Robot):
 
     def _stop_reading_thread(self):
         self.reading_thread_running = False
-        self.reading_thread.join()
+        self._reading_thread.join()
         if self.compare_target:
-            self.target_thread.join()
+            self._target_thread.join()
 
     def _stop_sim_thread(self):
         self.sim_thread_running = False
-        self.sim_thread.join()
+        self._sim_thread.join()
 
     def _update_joints_from_packet(self, packet):
         &#34;&#34;&#34;
@@ -369,7 +375,14 @@ class IRobot(Robot):
         self._assert_velocities(velocities=velocities)
 
     def __repr__(self):
-        return f&#39;Position: {self.get_joint_positions()}, Target: {self.target_position}, At Target: {self.at_target}&#39;</code></pre>
+        if self.normalized:
+            target = []
+            for i in range(len(self._joints)):
+                target.append(change_scale(self._joints[i].position_min, self._joints[i].postion_max, 0, 1, self.target_position[i]))
+            return f&#39;Position: {self.get_joint_positions()}, Target: {target}, At Target: {self.at_target}&#39;
+
+        else:
+            return f&#39;Position: {self.get_joint_positions()}, Target: {self.target_position}, At Target: {self.at_target}&#39;</code></pre>
 </details>
 </section>
 <section>
@@ -383,7 +396,7 @@ class IRobot(Robot):
 <dl>
 <dt id="interactive_robot.IRobot"><code class="flex name class">
 <span>class <span class="ident">IRobot</span></span>
-<span>(</span><span>normalized=True, virtual=False, compare_target=True)</span>
+<span>(</span><span>normalized=True, virtual=False, compare_target=True, remote=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Interactive Robot is a child of Robot class but contains methods for reading robot states and sending movement
@@ -398,6 +411,10 @@ that is always sending targets.</p>
 <dd>If true joint joint_positions is represented via a [0, 1] range else the dynamixel range [0,4095]</dd>
 <dt><strong><code>virtual</code></strong></dt>
 <dd>If true interacting with Unity robot, if false using real robot</dd>
+<dt><strong><code>compare_target</code></strong></dt>
+<dd>If True will start a thread that compares current position to target position (this is best disabled when recording states)</dd>
+<dt><strong><code>remote</code></strong></dt>
+<dd>If True will send packets to IRL Laptop (192.168.1.69) instead of local host</dd>
 </dl></div>
 <details class="source">
 <summary>
@@ -418,7 +435,7 @@ that is always sending targets.</p>
     READING_RATE = 1 / 500  # RATE = 1 / hz
     &#34;&#34;&#34;The rate data is read from Dynamixel&#34;&#34;&#34;
 
-    def __init__(self, normalized=True, virtual=False, compare_target=True):
+    def __init__(self, normalized=True, virtual=False, compare_target=True, remote=False):
         &#34;&#34;&#34;
         Interactive Robot is a child of Robot class but contains methods for reading robot states and sending movement
         targets.  Methods operate the same four both virtual and real life robot. Important to remember that real robot
@@ -428,45 +445,47 @@ that is always sending targets.</p>
         Args:
             normalized:  If true joint joint_positions is represented via a [0, 1] range else the dynamixel range [0,4095]
             virtual: If true interacting with Unity robot, if false using real robot
+            compare_target: If True will start a thread that compares current position to target position (this is best disabled when recording states)
+            remote: If True will send packets to IRL Laptop (192.168.1.69) instead of local host
         &#34;&#34;&#34;
 
         super().__init__(normalized=normalized)  # Call parent class constructor
 
-        self._socket_handler = SocketHandler(virtual=virtual)
+        self._socket_handler = SocketHandler(virtual=virtual, remote=remote)
         self.target_position = [2048] * 5  # Targets are always in dyna range
         self.target_velocity = [self.VELOCITY] * 5  # Velocities for real world robot
         self.virtual = virtual
         self.at_target = False
         self.compare_target = compare_target
+        self.timeout = 10  # Seconds before waiting to move arm times out
 
         # Threads
         self.first_packet_read = False
         self.reading_thread_running = False
-        self.reading_thread = Thread(target=self._get_joints_from_udp_loop)
+        self._reading_thread = Thread(target=self._get_joints_from_udp_loop)
 
         # Start the reading thread, it will block until first packet received
         self._start_reading_thread()
 
         # Target thread compares current position to goal position
         if compare_target:
-            self.target_thread = Thread(target=self._compare_current_to_target)
+            self._target_thread = Thread(target=self._compare_current_to_target)
             # Start comparison thread
-            self.target_thread.start()
+            self._target_thread.start()
 
         if virtual:
             self.target_velocity = [self.SIM_VELOCITY] * 5  # Velocities for virtual robot
             self.sim_thread_running = False
-            self.sim_thread = Thread(target=self._publish_sim_motor_states)
+            self._sim_thread = Thread(target=self._publish_sim_motor_states)
             # Only used by simulator
-            self.target_motor_states = [0] * 5  # 0 Not moving, 1 Increasing, 2 Decreasing
-            self.sim_thread.start()
+            self._target_motor_states = [0] * 5  # 0 Not moving, 1 Increasing, 2 Decreasing
+            self._sim_thread.start()
 
         # Signal to catch shutdown
         signal.signal(signal.SIGINT, self._exit_gracefully)
         signal.signal(signal.SIGTERM, self._exit_gracefully)
 
-
-    def move_robot(self, joint_positions, wait=False):
+    def move(self, joint_positions, wait=False):
         &#34;&#34;&#34;
         Main function for moving the arm, will set the current target variable to the joint_positions requested.  If
         running in the simulator thread will handle sending velocity updates.  For the real arm we send
@@ -489,14 +508,17 @@ that is always sending targets.</p>
             self._socket_handler.send_packet(packet)
 
         if wait:
+            start_time = time.time()
             while self.at_target is False:
+                if time.time() - start_time &gt; 10:
+                    print(&#34;Moving robot timed out&#34;)
+                    break
                 time.sleep(0.01)
 
     def stop_robot(self):
         &#34;&#34;&#34;Stops all the robots threads and closes the socket connection&#34;&#34;&#34;
-        self._exit_gracefully(0,0)
+        self._exit_gracefully(0, 0)
         self._socket_handler.sock.close()
-
 
     def _build_joints_packet(self):
         &#34;&#34;&#34;
@@ -521,13 +543,13 @@ that is always sending targets.</p>
             joint_positions = self.get_joint_positions(normalized=False)
             for i in range(len(joint_positions)):
                 if abs((joint_positions[i] - self.target_position[i])) &lt; self.TOLERANCE:
-                    self.target_motor_states[i] = 0
+                    self._target_motor_states[i] = 0
                 elif self._joints[i].position_min &gt; joint_positions[i] &gt; self._joints[i].position_max:
-                    self.target_motor_states[i] = 0
+                    self._target_motor_states[i] = 0
                 elif joint_positions[i] &gt; self.target_position[i]:
-                    self.target_motor_states[i] = 2
+                    self._target_motor_states[i] = 2
                 else:
-                    self.target_motor_states[i] = 1
+                    self._target_motor_states[i] = 1
 
             packet = [0xFF, 0xFF, 1, 4 * len(self._joints)]  # Length = 4 bytes (pos + vel) per joint
             for i in range(len(self._joints)):
@@ -535,7 +557,7 @@ that is always sending targets.</p>
                 packet.append(i)
                 packet.append(self.target_velocity[i] &amp; 0xFF)
                 packet.append((self.target_velocity[i] &gt;&gt; 8) &amp; 0xFF)
-                packet.append(self.target_motor_states[i] &amp; 0xFF)
+                packet.append(self._target_motor_states[i] &amp; 0xFF)
             packet.append(checksum_fcn(packet[2:]))  # Append checksum function to end
             return bytearray(packet)
         else:
@@ -609,7 +631,7 @@ that is always sending targets.</p>
         while self.reading_thread_running:
             total_difference = 0
             for i in range(len(self._joints)):
-                total_difference += abs(self.target_position[i] - self.get_joint_positions()[i])
+                total_difference += abs(self.target_position[i] - self.get_joint_positions(normalized=False)[i])
 
             if total_difference &gt; (self.TOLERANCE * len(self._joints)):
                 self.at_target = False
@@ -668,7 +690,7 @@ that is always sending targets.</p>
 
     def _start_reading_thread(self):
         &#34;&#34;&#34;
-        Starts the reading_thread that receives packets from brachIOPlexus and updates the robots state.  This will
+        Starts the _reading_thread that receives packets from brachIOPlexus and updates the robots state.  This will
         block until the first packet is read.
 
         Args:
@@ -679,7 +701,7 @@ that is always sending targets.</p>
 
         &#34;&#34;&#34;
         print(&#34;Starting read packet thread, waiting for first packet...&#34;)
-        self.reading_thread.start()
+        self._reading_thread.start()
 
         # Make sure nothing else starts until a first packet is read
         while self.first_packet_read is False:
@@ -688,13 +710,13 @@ that is always sending targets.</p>
 
     def _stop_reading_thread(self):
         self.reading_thread_running = False
-        self.reading_thread.join()
+        self._reading_thread.join()
         if self.compare_target:
-            self.target_thread.join()
+            self._target_thread.join()
 
     def _stop_sim_thread(self):
         self.sim_thread_running = False
-        self.sim_thread.join()
+        self._sim_thread.join()
 
     def _update_joints_from_packet(self, packet):
         &#34;&#34;&#34;
@@ -739,7 +761,14 @@ that is always sending targets.</p>
         self._assert_velocities(velocities=velocities)
 
     def __repr__(self):
-        return f&#39;Position: {self.get_joint_positions()}, Target: {self.target_position}, At Target: {self.at_target}&#39;</code></pre>
+        if self.normalized:
+            target = []
+            for i in range(len(self._joints)):
+                target.append(change_scale(self._joints[i].position_min, self._joints[i].postion_max, 0, 1, self.target_position[i]))
+            return f&#39;Position: {self.get_joint_positions()}, Target: {target}, At Target: {self.at_target}&#39;
+
+        else:
+            return f&#39;Position: {self.get_joint_positions()}, Target: {self.target_position}, At Target: {self.at_target}&#39;</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -776,8 +805,8 @@ tolerance of 15</p></div>
 </dl>
 <h3>Methods</h3>
 <dl>
-<dt id="interactive_robot.IRobot.move_robot"><code class="name flex">
-<span>def <span class="ident">move_robot</span></span>(<span>self, joint_positions, wait=False)</span>
+<dt id="interactive_robot.IRobot.move"><code class="name flex">
+<span>def <span class="ident">move</span></span>(<span>self, joint_positions, wait=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Main function for moving the arm, will set the current target variable to the joint_positions requested.
@@ -797,7 +826,7 @@ packet with the requested positions.</p>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def move_robot(self, joint_positions, wait=False):
+<pre><code class="python">def move(self, joint_positions, wait=False):
     &#34;&#34;&#34;
     Main function for moving the arm, will set the current target variable to the joint_positions requested.  If
     running in the simulator thread will handle sending velocity updates.  For the real arm we send
@@ -820,7 +849,11 @@ packet with the requested positions.</p>
         self._socket_handler.send_packet(packet)
 
     if wait:
+        start_time = time.time()
         while self.at_target is False:
+            if time.time() - start_time &gt; 10:
+                print(&#34;Moving robot timed out&#34;)
+                break
             time.sleep(0.01)</code></pre>
 </details>
 </dd>
@@ -835,7 +868,7 @@ packet with the requested positions.</p>
 </summary>
 <pre><code class="python">def stop_robot(self):
     &#34;&#34;&#34;Stops all the robots threads and closes the socket connection&#34;&#34;&#34;
-    self._exit_gracefully(0,0)
+    self._exit_gracefully(0, 0)
     self._socket_handler.sock.close()</code></pre>
 </details>
 </dd>
@@ -861,7 +894,7 @@ packet with the requested positions.</p>
 <li><code><a title="interactive_robot.IRobot.SIM_VELOCITY" href="#interactive_robot.IRobot.SIM_VELOCITY">SIM_VELOCITY</a></code></li>
 <li><code><a title="interactive_robot.IRobot.TOLERANCE" href="#interactive_robot.IRobot.TOLERANCE">TOLERANCE</a></code></li>
 <li><code><a title="interactive_robot.IRobot.VELOCITY" href="#interactive_robot.IRobot.VELOCITY">VELOCITY</a></code></li>
-<li><code><a title="interactive_robot.IRobot.move_robot" href="#interactive_robot.IRobot.move_robot">move_robot</a></code></li>
+<li><code><a title="interactive_robot.IRobot.move" href="#interactive_robot.IRobot.move">move</a></code></li>
 <li><code><a title="interactive_robot.IRobot.stop_robot" href="#interactive_robot.IRobot.stop_robot">stop_robot</a></code></li>
 </ul>
 </li>

@@ -23,7 +23,7 @@ class StateRecorder:
     def exit_gracefully(self, signum, frame):
         """Since the program runs continuously in a while True loop you need a signal to handle writing the data to a csv
         and exiting the program once a signal (Ctrl-c) / (Stop Button IDE) is detected"""
-        print("Signal Detected. Stopping joint read reading_thread and exiting...")
+        print("Signal Detected. Stopping joint read _reading_thread and exiting...")
         self.robot._stop_reading_thread()
         self.robot._socket_handler.sock.close()
         with open(self.filename, 'w', newline='') as fp:

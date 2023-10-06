@@ -130,9 +130,9 @@ class MxSeries(ServoInfo):
     properties for that individual servo and functions for getting/converting these properties to other ranges.
     &#34;&#34;&#34;
 
-    MIN_ANGLES = [1028, 1784, 1028, 790, 1928]
+    MIN_ANGLES = [1170, 1784, 1028, 790, 1928]
     &#34;&#34;&#34;Minimum dyna values for each motor&#34;&#34;&#34;
-    MAX_ANGLES = [3073, 2570, 3073, 3328, 2800]
+    MAX_ANGLES = [2931, 2570, 3073, 3328, 2800]
     &#34;&#34;&#34;Max dyna values for each motor&#34;&#34;&#34;
     V_RANGE = [55, 45, 90, 67, 90]
     &#34;&#34;&#34;The allowable +- velocity range from 1024&#34;&#34;&#34;
@@ -179,7 +179,7 @@ class MxSeries(ServoInfo):
 
     def normalized_to_dyna_pos_range(self, value):
         &#34;&#34;&#34;Takes in a value in [0,1] and converts it to a dyna position value within that particular motors range&#34;&#34;&#34;
-        return change_scale(old_min=0, old_max=1, new_min=self.position_min, new_max=self.postion_max, value=value)
+        return change_scale(old_min=0, old_max=1, new_min=self.position_min+self.BUFFER, new_max=self.postion_max-self.BUFFER, value=value)
 
     def normalized_to_dyna_vel_range(self, value):
         &#34;&#34;&#34;Takes in a value in [0,1] and converts it to a dyna velocity value within that particular motors range&#34;&#34;&#34;
@@ -287,9 +287,9 @@ properties for that individual servo and functions for getting/converting these 
     properties for that individual servo and functions for getting/converting these properties to other ranges.
     &#34;&#34;&#34;
 
-    MIN_ANGLES = [1028, 1784, 1028, 790, 1928]
+    MIN_ANGLES = [1170, 1784, 1028, 790, 1928]
     &#34;&#34;&#34;Minimum dyna values for each motor&#34;&#34;&#34;
-    MAX_ANGLES = [3073, 2570, 3073, 3328, 2800]
+    MAX_ANGLES = [2931, 2570, 3073, 3328, 2800]
     &#34;&#34;&#34;Max dyna values for each motor&#34;&#34;&#34;
     V_RANGE = [55, 45, 90, 67, 90]
     &#34;&#34;&#34;The allowable +- velocity range from 1024&#34;&#34;&#34;
@@ -336,7 +336,7 @@ properties for that individual servo and functions for getting/converting these 
 
     def normalized_to_dyna_pos_range(self, value):
         &#34;&#34;&#34;Takes in a value in [0,1] and converts it to a dyna position value within that particular motors range&#34;&#34;&#34;
-        return change_scale(old_min=0, old_max=1, new_min=self.position_min, new_max=self.postion_max, value=value)
+        return change_scale(old_min=0, old_max=1, new_min=self.position_min+self.BUFFER, new_max=self.postion_max-self.BUFFER, value=value)
 
     def normalized_to_dyna_vel_range(self, value):
         &#34;&#34;&#34;Takes in a value in [0,1] and converts it to a dyna velocity value within that particular motors range&#34;&#34;&#34;
@@ -507,7 +507,7 @@ properties for that individual servo and functions for getting/converting these 
 </summary>
 <pre><code class="python">def normalized_to_dyna_pos_range(self, value):
     &#34;&#34;&#34;Takes in a value in [0,1] and converts it to a dyna position value within that particular motors range&#34;&#34;&#34;
-    return change_scale(old_min=0, old_max=1, new_min=self.position_min, new_max=self.postion_max, value=value)</code></pre>
+    return change_scale(old_min=0, old_max=1, new_min=self.position_min+self.BUFFER, new_max=self.postion_max-self.BUFFER, value=value)</code></pre>
 </details>
 </dd>
 <dt id="robot.MxSeries.normalized_to_dyna_vel_range"><code class="name flex">

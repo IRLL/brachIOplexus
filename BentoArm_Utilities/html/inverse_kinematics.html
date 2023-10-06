@@ -227,7 +227,8 @@ class InverseKinematics:
             return joints
 
         else:
-            return [change_scale(-pi, pi, self.robot._joints[0].DYNA_MIN, self.robot._joints[0].DYNA_MAX, i) for i in ik_radians]
+            return [change_scale(-pi, pi, self.robot._joints[0].DYNA_MIN, self.robot._joints[0].DYNA_MAX, i) for i in
+                    ik_radians]
 
 
 def test_ik():
@@ -534,7 +535,8 @@ using the solidworks model.</p>
             return joints
 
         else:
-            return [change_scale(-pi, pi, self.robot._joints[0].DYNA_MIN, self.robot._joints[0].DYNA_MAX, i) for i in ik_radians]</code></pre>
+            return [change_scale(-pi, pi, self.robot._joints[0].DYNA_MIN, self.robot._joints[0].DYNA_MAX, i) for i in
+                    ik_radians]</code></pre>
 </details>
 <h3>Methods</h3>
 <dl>
@@ -653,7 +655,8 @@ of the end effector in 3D space (cm)</p>
         return joints
 
     else:
-        return [change_scale(-pi, pi, self.robot._joints[0].DYNA_MIN, self.robot._joints[0].DYNA_MAX, i) for i in ik_radians]</code></pre>
+        return [change_scale(-pi, pi, self.robot._joints[0].DYNA_MIN, self.robot._joints[0].DYNA_MAX, i) for i in
+                ik_radians]</code></pre>
 </details>
 </dd>
 <dt id="inverse_kinematics.InverseKinematics.inverse_kinematics"><code class="name flex">
