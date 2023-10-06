@@ -39,7 +39,7 @@ class IRobot(Robot):
 
         self._socket_handler = SocketHandler(virtual=virtual, remote=remote)
         self.target_position = [2048] * 5  # Targets are always in dyna range
-        self.target_velocity = [self.VELOCITY] * 5  # Velocities for real world robot
+        self._target_velocity = [self.VELOCITY] * 5  # Velocities for real world robot
         self.virtual = virtual
         self.at_target = False
         self.compare_target = compare_target
@@ -60,7 +60,7 @@ class IRobot(Robot):
             self._target_thread.start()
 
         if virtual:
-            self.target_velocity = [self.SIM_VELOCITY] * 5  # Velocities for virtual robot
+            self._target_velocity = [self.SIM_VELOCITY] * 5  # Velocities for virtual robot
             self.sim_thread_running = False
             self._sim_thread = Thread(target=self._publish_sim_motor_states)
             # Only used by simulator
@@ -141,8 +141,8 @@ class IRobot(Robot):
             for i in range(len(self._joints)):
                 # Convert data into little endian bytes
                 packet.append(i)
-                packet.append(self.target_velocity[i] & 0xFF)
-                packet.append((self.target_velocity[i] >> 8) & 0xFF)
+                packet.append(self._target_velocity[i] & 0xFF)
+                packet.append((self._target_velocity[i] >> 8) & 0xFF)
                 packet.append(self._target_motor_states[i] & 0xFF)
             packet.append(checksum_fcn(packet[2:]))  # Append checksum function to end
             return bytearray(packet)
@@ -152,8 +152,8 @@ class IRobot(Robot):
                 # Convert data into little endian bytes
                 packet.append(self.target_position[i] & 0xFF)
                 packet.append((self.target_position[i] >> 8) & 0xFF)
-                packet.append(self.target_velocity[i] & 0xFF)
-                packet.append((self.target_velocity[i] >> 8) & 0xFF)
+                packet.append(self._target_velocity[i] & 0xFF)
+                packet.append((self._target_velocity[i] >> 8) & 0xFF)
             packet.append(checksum_fcn(packet[2:]))  # Append checksum function to end
             return bytearray(packet)
 
@@ -339,7 +339,7 @@ class IRobot(Robot):
 
         """
         if velocities is None:
-            velocities = self.target_velocity
+            velocities = self._target_velocity
 
         # Safety check positional targets and convert to dyna range
         self.target_position = self._convert_assert_joint_positions(joint_positions=joint_positions)
