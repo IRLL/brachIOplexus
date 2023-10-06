@@ -21,7 +21,7 @@ class IRobot(Robot):
     READING_RATE = 1 / 500  # RATE = 1 / hz
     """The rate data is read from Dynamixel"""
 
-    def __init__(self, normalized=True, virtual=False, compare_target=True, remote=None):
+    def __init__(self, normalized=True, virtual=False, compare_target=True, remote=False):
         """
         Interactive Robot is a child of Robot class but contains methods for reading robot states and sending movement
         targets.  Methods operate the same four both virtual and real life robot. Important to remember that real robot
@@ -31,6 +31,8 @@ class IRobot(Robot):
         Args:
             normalized:  If true joint joint_positions is represented via a [0, 1] range else the dynamixel range [0,4095]
             virtual: If true interacting with Unity robot, if false using real robot
+            compare_target: If True will start a thread that compares current position to target position (this is best disabled when recording states)
+            remote: If True will send packets to IRL Laptop (192.168.1.69) instead of local host
         """
 
         super().__init__(normalized=normalized)  # Call parent class constructor

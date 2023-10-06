@@ -4,11 +4,15 @@ import select
 
 
 class SocketHandler:
-    def __init__(self, virtual=False, remote=None):
+    def __init__(self, virtual=False, remote=False):
         """
         Socket handler used for UDP communication with BrachIOPlexus uses one port for sending and another for
         receiving.  Due to the dual port nature of this setup it is best to have one reading_thread constantly looking for
         packets and another sending when needed.
+
+        Args:
+            virutal: If true will send packets to the Unity port, else, to BrachIOplexus port
+            remote: If True will send packets to static IRL laptop ip (192.168.1.69) else localhost
 
         Attributes:
             port_tx (int): The port that this script will send data to.  Default (30006)
