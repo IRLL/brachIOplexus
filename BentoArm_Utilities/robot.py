@@ -102,9 +102,9 @@ class MxSeries(ServoInfo):
     properties for that individual servo and functions for getting/converting these properties to other ranges.
     """
 
-    MIN_ANGLES = [1028, 1784, 1028, 790, 1928]
+    MIN_ANGLES = [1170, 1784, 1028, 790, 1928]
     """Minimum dyna values for each motor"""
-    MAX_ANGLES = [3073, 2570, 3073, 3328, 2800]
+    MAX_ANGLES = [2931, 2570, 3073, 3328, 2800]
     """Max dyna values for each motor"""
     V_RANGE = [55, 45, 90, 67, 90]
     """The allowable +- velocity range from 1024"""
