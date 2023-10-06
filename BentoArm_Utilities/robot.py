@@ -151,7 +151,7 @@ class MxSeries(ServoInfo):
 
     def normalized_to_dyna_pos_range(self, value):
         """Takes in a value in [0,1] and converts it to a dyna position value within that particular motors range"""
-        return change_scale(old_min=0, old_max=1, new_min=self.position_min, new_max=self.postion_max, value=value)
+        return change_scale(old_min=0, old_max=1, new_min=self.position_min+self.BUFFER, new_max=self.postion_max-self.BUFFER, value=value)
 
     def normalized_to_dyna_vel_range(self, value):
         """Takes in a value in [0,1] and converts it to a dyna velocity value within that particular motors range"""
