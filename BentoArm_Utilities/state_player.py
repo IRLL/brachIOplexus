@@ -4,7 +4,7 @@ import sys
 import os.path
 import time
 
-VIRTUAL = False
+VIRTUAL = True
 
 
 def playback(file, normalized, virtual=False):

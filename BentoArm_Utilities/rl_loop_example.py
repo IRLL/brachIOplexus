@@ -1,19 +1,14 @@
-from socket_handler import SocketHandler
-from robot import Robot, DYNA_MIN, DYNA_MAX
-from helper_functions import change_scale
-from threading import Thread
+from interactive_robot import IRobot
 from inverse_kinematics import InverseKinematics
+
 import time
-from math import pi
 import matplotlib.pyplot as plt
 
 
 class Rl:
 
     def __init__(self, normalized=True):
-        self.socket_handler = SocketHandler()
-        self.robot = Robot(normalized=normalized)
-        self.robot.start_reading_thread(socket_handler=self.socket_handler)
+        self.robot = IRobot(normalized=normalized)
         self.ik = InverseKinematics(robot_obj=self.robot)
 
     def get_full_state(self):
@@ -61,9 +56,7 @@ class Rl:
         else:
             # These are the raw centered values
             action = [2048, 2048, 2048, 2048, 2048]
-        packet = self.robot.build_joints_packet(action)
-        self.socket_handler.send_packet(packet)
-        time.sleep(2)
+        self.robot.move(action, wait=True)
 
         for goal in goal_states:
             dyna_state, normalized_state, end_effector_pos = self.get_full_state()
@@ -75,15 +68,13 @@ class Rl:
             # ACTION
             action = self.ik.get_joints_for_goal_xyz(goal)
             print(f"Action {action}")
-            packet = self.robot.build_joints_packet(action)
-            self.socket_handler.send_packet(packet)
-            time.sleep(2)
+            self.robot.move(action, wait=True)
 
             # NEW STATE
             print(f"New State {self.ik.get_end_effector_position_xyz()}")
             print("----------------------")
 
-        self.robot.stop_reading_thread()
+        self.robot.stop_robot()
         plt.show()
 
 
