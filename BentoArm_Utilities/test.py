@@ -3,7 +3,6 @@ from state_recorder import StateRecorder
 from inverse_kinematics import test_ik
 import csv
 import os
-import time
 
 
 def main():

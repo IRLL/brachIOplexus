@@ -1,8 +1,5 @@
 import csv
-
 from interactive_robot import IRobot
-robot = IRobot(remote=True)
-
 import sys
 import os.path
 import time

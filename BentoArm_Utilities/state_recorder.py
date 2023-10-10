@@ -1,5 +1,4 @@
 import csv
-from socket_handler import SocketHandler
 from interactive_robot import IRobot
 import signal
 import datetime
@@ -11,7 +10,8 @@ class StateRecorder:
 
     def __init__(self, normalized=True, print_data=False):
         self.data = []
-        self.robot = IRobot(virtual=False, normalized=normalized, compare_target=False)  # Create Robot object
+        # For state recorder it does not matter if virtual or not, compare target is made false for better processing
+        self.robot = IRobot(normalized=normalized, compare_target=False)  # Create Robot object
         self.print_data = print_data
         if normalized:
             self.filename = datetime.datetime.now().strftime('%Y_%m_%d_%H%M%S_normalized.csv')
