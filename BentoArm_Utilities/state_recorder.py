@@ -6,7 +6,7 @@ import time
 
 
 class StateRecorder:
-    RATE = 1 / 500  # rate = 1 / hz
+    RATE = 1 / 250  # rate = 1 / hz
 
     def __init__(self, normalized=True, print_data=False):
         self.data = []
@@ -23,9 +23,8 @@ class StateRecorder:
     def exit_gracefully(self, signum, frame):
         """Since the program runs continuously in a while True loop you need a signal to handle writing the data to a csv
         and exiting the program once a signal (Ctrl-c) / (Stop Button IDE) is detected"""
-        print("Signal Detected. Stopping joint read _reading_thread and exiting...")
-        self.robot._stop_reading_thread()
-        self.robot._socket_handler.sock.close()
+        print("Signal Detected. Stopping joint read thread and exiting...")
+        self.robot.stop_robot()
         with open(self.filename, 'w', newline='') as fp:
             w = csv.writer(fp)
             w.writerows(self.data)
@@ -50,8 +49,7 @@ class StateRecorder:
             time.sleep(self.RATE)
         print(f"Recording Time: {time.time() - current_time}")
 
-        self.robot._stop_reading_thread()
-        self.robot._socket_handler.sock.close()
+        self.robot.stop_robot()
         with open(self.filename, 'w', newline='') as fp:
             w = csv.writer(fp)
             w.writerows(self.data)
